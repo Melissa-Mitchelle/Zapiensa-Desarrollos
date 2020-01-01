@@ -31,22 +31,64 @@ class BenfsData(Resource):
 
 class Create_new_register(Resource):
     def post(self):
+        conn = db_connect.connect()
         parser.add_argument('be_curp', type=str)
         parser.add_argument('be_name', type=str)
         parser.add_argument('be_telh', type=str)
         parser.add_argument('be_telm', type=str)
         parser.add_argument('be_codp', type=str)
         parser.add_argument('be_email', type=str)
+        parser.add_argument('be_asis', type=int)
         parser.add_argument('be_conf', type=int)
         args = parser.parse_args()
         values = list(args.values())
-        query = """insert into Benfs values('{}')""".format(values[0])
-        return {'query': str(query)}
+        query = conn.execute("""insert into Benfs values('{}','{}','{}','{}','{}','{}',{},{})""".format(values[0],values[1],values[2],
+                                                                                          values[3],values[4],values[5],
+                                                                                          values[6],values[7]))
+
+        ##return {'query': str(query)}
+
+class Delete_Register(Resource):
+    def delete(self):
+        conn = db_connect.connect()
+        parser.add_argument('be_curp', type=str)
+        args = parser.parse_args()
+        values = list(args.values())
+        query = """DELETE FROM Benfs WHERE be_curp == values('{}')""".format(values[0])
+        return {'query' : str(query)}
+
+class Edit_Register(Resource):
+    def put(self, be_curp):
+        conn = db_connect.connect()
+        parser.add_argument('be_curp', type=str)
+        parser.add_argument('be_name', type=str)
+        parser.add_argument('be_telh', type=str)
+        parser.add_argument('be_telm', type=str)
+        parser.add_argument('be_codp', type=str)
+        parser.add_argument('be_email', type=str)
+        parser.add_argument('be_asis', type=int)
+        parser.add_argument('be_conf', type=int)
+        args = parser.parse_args()
+        values = list(args.values())
+        query = conn.execute("""UPDATE Benfs 
+                    SET be_name = '{}',
+                        be_telh = '{}',
+                        be_telm = '{}',
+                        be_codp = '{}',
+                        be_email = '{}',
+                        be_asis = '{}',
+                        be_conf = '{}'
+                    WHERE be_curp = '{}'
+                    """.format(values[1],values[2],values[3],values[4],values[5],values[6],values[7],values[0]))
+        ##return {'query': str(query)}
+
 
 api.add_resource(Curps, '/Curps') # Route_1
 api.add_resource(Registros, '/Registros') # Route_2
 api.add_resource(BenfsData, '/Curps/<be_curp>') # Route_3
 api.add_resource(Create_new_register, '/new_curp_reg')
+api.add_resource(Delete_Register, '/Del_Reg') #Route_5
+api.add_resource(Edit_Register, '/Edit/<be_curp>')
 
 if __name__ == '__main__':
      app.run(port='5002')
