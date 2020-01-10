@@ -20,7 +20,7 @@ import views, models, resources
 
 api.add_resource(resources.Curps, '/Curps')
 api.add_resource(resources.Registros, '/Registros')
-api.add_resource(resources.ReceiverData, '/Curps/<be_curp>')
+api.add_resource(resources.ReceiverData, '/Curps/<curp>')
 api.add_resource(resources.CreateUser, '/createUser')
 api.add_resource(resources.DeleteUser, '/deleteUser/<id_user>')
 api.add_resource(resources.EditUser, '/editUser/<id_user>')

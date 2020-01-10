@@ -1,5 +1,5 @@
 import sqlalchemy
-from flask import request, json, render_template, Response
+from flask import request, json, render_template, Response, make_response
 from flask_restful import Resource, reqparse
 from json import dumps
 from flask_jsonpify import jsonify
@@ -31,11 +31,11 @@ class Registros(Resource):
 class ReceiverData(Resource):
     def get(self, curp):
         try:
-            receiver = UserModel.get_one_receiver(curp)
+            receiver = ReceiverModel.find_by_curp(curp)
             ser_receiver = receiver_schema.dump(receiver)
-            return {
-                       'message': ser_receiver
-                   }, 200
+            headers = {'Content-Type': 'text/html'}
+            print(ser_receiver)
+            return make_response(render_template('searchFormResult.html', first_name = ser_receiver["first_name"], last_name = ser_receiver["last_name"], curp = ser_receiver["curp"]), 200, headers)
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
