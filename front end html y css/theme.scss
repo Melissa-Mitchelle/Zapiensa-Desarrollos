@@ -14,8 +14,8 @@ $enable-print-styles:       true;
 // Colors
 
 $theme-colors: (
-  primary: #7C858C,
-  secondary: #151515,
+  primary: #12bbad,
+  secondary: #4f70ce,
   light: #f3f3f3,
   dark: #151515,
   info: #ccc,
@@ -25,11 +25,11 @@ $theme-colors: (
 );
 
 $body-bg: white;
-$body-color: #151515;
+$body-color: #333;
 
 
 $body-color-inverse: invert($body-color) !default;
-
+$link-color: #12bbad;
 
 // Fonts
 $font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -40,6 +40,5 @@ $headings-font-weight: 200;
 $lead-font-size:   1.30rem;
 
 $spacer: 1.5rem;
-$link-color: #0000EE;
 
 @import 'bootstrap-4.3.1';
