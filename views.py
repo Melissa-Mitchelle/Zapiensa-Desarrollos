@@ -1,6 +1,6 @@
-from run import app
+from config import app
 from flask import jsonify, render_template
-
+from flask_security import login_required
 
 @app.route('/')
 def index():
@@ -8,5 +8,6 @@ def index():
 
 
 @app.route('/search')
+@login_required
 def search_form():
     return render_template('searchForm.html'), 200

@@ -1,23 +1,33 @@
-from sqlalchemy import ForeignKey
-from run import db
+from flask_security.forms import RegisterForm, Required, LoginForm
+from flask_wtf import FlaskForm
 from marshmallow import fields, Schema
 import datetime
 
+from wtforms import StringField, SubmitField, validators
 
-class UserModel(db.Model):
-    __tablename__ = 'USERS'
+from config import db
+from flask_security import UserMixin, RoleMixin
 
-    id_user = db.Column(db.Integer, primary_key=True)
+roles_users = db.Table('roles_users',
+                       db.Column('user_id', db.Integer(), db.ForeignKey('users.id')),
+                       db.Column('role_id', db.Integer(), db.ForeignKey('roles.id_role')))
+
+
+class UserModel(db.Model, UserMixin):
+    __tablename__ = 'users'
+
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(45), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
     username = db.Column(db.String(45), unique=True, nullable=False)
-    password = db.Column(db.String(45), nullable=False)
+    password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(45), nullable=False)
-#    id_role = db.Column(db.Integer, ForeignKey("roles.id_role"), nullable=False)
-    id_role = db.Column(db.Integer, nullable=False)
-    is_active = db.Column(db.Boolean, nullable=False)
+    #    id_role = db.Column(db.Integer, db.ForeignKey("roles.id_role"), nullable=False)
+    active = db.Column(db.Boolean, nullable=False)
     created_at = db.Column(db.DateTime)
     modified_at = db.Column(db.DateTime)
+    roles = db.relationship('Role', secondary=roles_users,
+                            backref=db.backref('users', lazy='dynamic'))
 
     def __init__(self, data):
         self.first_name = data.get('first_name')
@@ -25,8 +35,7 @@ class UserModel(db.Model):
         self.username = data.get('username')
         self.password = data.get('password')
         self.email = data.get('email')
-        self.id_role = data.get('id_role')
-        self.is_active = data.get('is_active')
+        self.active = data.get('is_active')
         self.created_at = datetime.datetime.utcnow()
         self.modified_at = datetime.datetime.utcnow()
 
@@ -45,7 +54,7 @@ class UserModel(db.Model):
 
     @classmethod
     def find_by_username(cls, username):
-        return cls.query.filter_by(username = username).first()
+        return cls.query.filter_by(username=username).first()
 
     @staticmethod
     def get_all_users():
@@ -57,20 +66,35 @@ class UserModel(db.Model):
 
 
 class UserSchema(Schema):
-    id_user = fields.Int(dump_only=True)
+    id = fields.Int(dump_only=True)
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True)
     email = fields.Email(required=True)
-    id_role = fields.Int(required=True)
     is_active = fields.Bool(required=True)
     created_at = fields.DateTime(dump_only=True)
     modified_at = fields.DateTime(dump_only=True)
 
 
+# Define the Role data-model
+class Role(db.Model, RoleMixin):
+    __tablename__ = 'roles'
+    id_role = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(50), unique=True)
+
+
+"""# Define the UserRoles association table
+class UserRoles(db.Model):
+    __tablename__ = 'user_roles'
+    id_user_role = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer(), db.ForeignKey('users.id_user', ondelete='CASCADE'))
+    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id_role', ondelete='CASCADE'))
+"""
+
+
 class ReceiverModel(db.Model):
-    __tablename__ = 'RECEIVERS'
+    __tablename__ = 'receivers'
 
     id_receiver = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(45), nullable=False)
@@ -120,12 +144,12 @@ class ReceiverModel(db.Model):
         return cls.query.filter_by(curp=curp).first()
 
     @staticmethod
-    def get_all_users():
-        return UserModel.query.all()
+    def get_all_receivers():
+        return ReceiverModel.query.all()
 
     @staticmethod
     def get_one_receiver(id_receiver):
-        return UserModel.query.get(id_receiver)
+        return ReceiverModel.query.get(id_receiver)
 
 
 class ReceiverSchema(Schema):
