@@ -2,21 +2,29 @@ import sqlalchemy
 from flask import request, json, render_template, Response, make_response
 from flask_restful import Resource, reqparse
 from json import dumps
-from flask_jsonpify import jsonify
-from models import UserModel, UserSchema, ReceiverModel, ReceiverSchema
+#from flask_jsonpify import jsonify
+from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required
+from flask_security.utils import hash_password
+
+from config import app, db
+
+from models import UserModel, UserSchema, ReceiverModel, ReceiverSchema, Role
 
 user_schema = UserSchema()
 receiver_schema = ReceiverSchema()
+user_datastore = SQLAlchemyUserDatastore(db, UserModel, Role)
+security = Security(app, user_datastore)
 
 
 class Curps(Resource):
     def get(self):
-        conn = db_connect.connect() # connect to database
-        query = conn.execute("select * from Benfs") # This line performs query and returns json result
-        return {'curps': [i[0] for i in query.cursor.fetchall()]} # Fetches first column that is CURP
+        conn = db_connect.connect()  # connect to database
+        query = conn.execute("select * from Benfs")  # This line performs query and returns json result
+        return {'curps': [i[0] for i in query.cursor.fetchall()]}  # Fetches first column that is CURP
 
 
 class Registros(Resource):
+    @login_required
     def get(self):
         try:
             receivers = ReceiverModel.get_all_receivers()
@@ -32,17 +40,24 @@ class ReceiverData(Resource):
     def get(self, curp):
         try:
             receiver = ReceiverModel.find_by_curp(curp)
-            ser_receiver = receiver_schema.dump(receiver)
-            headers = {'Content-Type': 'text/html'}
-            print(ser_receiver)
-            return make_response(render_template('searchFormResult.html', first_name = ser_receiver["first_name"], last_name = ser_receiver["last_name"], curp = ser_receiver["curp"]), 200, headers)
+            if receiver:
+                ser_receiver = receiver_schema.dump(receiver)
+                headers = {'Content-Type': 'text/html'}
+                print(ser_receiver)
+                return make_response(render_template('searchFormResult.html', first_name=ser_receiver["first_name"],
+                                                     last_name=ser_receiver["last_name"], curp=ser_receiver["curp"]),
+                                     200,
+                                     headers)
+            else:
+                return 'User not found'
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
-        #return jsonify(result)
+        # return jsonify(result)
 
 
 class CreateUser(Resource):
+    @roles_required('admin')
     def post(self):
         req_data = request.get_json()
         data = user_schema.load(req_data)
@@ -51,6 +66,7 @@ class CreateUser(Resource):
             if UserModel.find_by_username(data['username']):
                 return {'message': 'User {} already exists'.format(data['username'])}
             user = UserModel(data)
+            user.password = hash_password(user.password)
             user.create()
             return {
                 'message': 'Usuario {} creado'.format(data['username'])
@@ -60,6 +76,7 @@ class CreateUser(Resource):
 
 
 class DeleteUser(Resource):
+    @roles_required('admin')
     def delete(self, id_user):
         try:
             user = UserModel.get_one_user(id_user)
@@ -73,6 +90,7 @@ class DeleteUser(Resource):
 
 
 class EditUser(Resource):
+    @roles_required('admin')
     def put(self, id_user):
         req_data = request.get_json()
         data = user_schema.load(req_data, partial=True)
@@ -84,26 +102,10 @@ class EditUser(Resource):
             ser_user = user_schema.dump(user)
 
             return {
-                'message': 'Usuario {} editado'.format(ser_user['username'])
-            }, 200
+                       'message': 'Usuario {} editado'.format(ser_user['username'])
+                   }, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
-
-
-class UserLogin(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('username', help='This field cannot be blank', required=True)
-        parser.add_argument('password', help='This field cannot be blank', required=True)
-        data = parser.parse_args()
-        current_user = UserModel.find_by_username(data['username'])
-        if not current_user:
-            return {'message': 'User {} doesn\'t exist'.format(data['username'])}
-
-        if data['password'] == current_user.password:
-            return {'message': 'Logged in as {}'.format(current_user.username)}
-        else:
-            return {'message': 'Wrong credentials'}
 
 
 class CreateReceiver(Resource):
@@ -124,6 +126,7 @@ class CreateReceiver(Resource):
 
 
 class DeleteReceiver(Resource):
+    @roles_required('admin')
     def delete(self, id_receiver):
         try:
             receiver = ReceiverModel.get_one_receiver(id_receiver)
@@ -148,10 +151,11 @@ class EditReceiver(Resource):
             ser_receiver = receiver_schema.dump(receiver)
 
             return {
-                'message': 'Usuario {} editado'.format(ser_receiver['curp'])
-            }, 200
+                       'message': 'Usuario {} editado'.format(ser_receiver['curp'])
+                   }, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
+
 
 def custom_response(res, status_code):
     return Response(
