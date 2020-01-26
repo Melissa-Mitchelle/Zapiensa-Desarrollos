@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import request, json, render_template, Response, make_response
 from flask_restful import Resource, reqparse
 from json import dumps
-#from flask_jsonpify import jsonify
+# from flask_jsonpify import jsonify
 from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required
 from flask_security.utils import hash_password
 
@@ -18,13 +18,13 @@ security = Security(app, user_datastore)
 
 class Curps(Resource):
     def get(self):
-        conn = db_connect.connect()  # connect to database
-        query = conn.execute("select * from Benfs")  # This line performs query and returns json result
-        return {'curps': [i[0] for i in query.cursor.fetchall()]}  # Fetches first column that is CURP
+        # conn = db_connect.connect()  # connect to database
+        query = db.execute("SELECT * FROM view_receivers")  # This line performs query and returns json result
+        return {'curps': [i[2] for i in query.cursor.fetchall()]}  # Fetches first column that is CURP
 
 
 class Registros(Resource):
-    @login_required
+    # @login_required
     def get(self):
         try:
             receivers = ReceiverModel.get_all_receivers()
