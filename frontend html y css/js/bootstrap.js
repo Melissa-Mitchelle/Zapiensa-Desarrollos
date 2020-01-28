@@ -21,6 +21,10 @@ function _defineProperties(target, props) {
     Object.defineProperty(target, descriptor.key, descriptor);
   }
 }
+$('.custom-file-input').on('change',function(){
+  var fileName = document.getElementById("inputGroupFile01").files[0].name;
+  $(this).next('.form-control-file').addClass("selected").html(fileName);
+})
 
 function _createClass(Constructor, protoProps, staticProps) {
   if (protoProps) _defineProperties(Constructor.prototype, protoProps);
