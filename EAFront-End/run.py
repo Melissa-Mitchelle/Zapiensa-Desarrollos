@@ -1,9 +1,5 @@
-import json
-from http import cookiejar
-from urllib.parse import unquote
-
 import requests
-from flask import Flask, render_template, send_from_directory, request, url_for, redirect, make_response, session, Response
+from flask import Flask, render_template, send_from_directory, request, url_for, redirect, make_response, session
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
