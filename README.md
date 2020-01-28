@@ -7,3 +7,9 @@ Repositorio Creado para el desarrollo de la ZAP App Equipo # 9 Zapiensa-Desarrol
     -Roles
     -Exportación e importación de base de datos
     -Modulo de notificaciónes (llamadas)
+
+#Required Packages:
+`flask-restful
+flask-sqlalchemy
+marshmallow
+flask-security`
