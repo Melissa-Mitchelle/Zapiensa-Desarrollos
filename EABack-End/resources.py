@@ -1,10 +1,7 @@
 import datetime
 import sqlalchemy
 from flask import request, json, render_template, Response, make_response, redirect, url_for, session
-from flask_principal import Principal, Identity
 from flask_restful import Resource, reqparse
-# from json import dumps
-from flask_jsonpify import jsonify
 from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required, LoginForm
 from flask_login import current_user, LoginManager
 from flask_security.utils import hash_password

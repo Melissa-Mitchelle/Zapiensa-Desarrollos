@@ -28,20 +28,19 @@ def login():
                 session['api_session_token'] = token
                 r2 = s.get('http://localhost:5002/checkrole')
                 session['role'] = r2.text.replace('"','').replace('\n','')
-                print(session['role'])
-                return redirect(url_for('dashboard_' + session['role']))
+                return redirect(url_for('dashboard_' + session['role'].lower()))
             else:
                 return r.content
 
 
-@app.route("/dashboard_admin", methods=['GET'])
-def dashboard_admin():
+@app.route("/dashboard_administrador", methods=['GET'])
+def dashboard_administrador():
     try:
         token = session['api_session_token']
         r = requests.get('http://localhost:5002/receiversModifications',
                          headers={'Authentication-Token': token})
         if r.ok:
-            return render_template('dashboard_admin.html', receivers_modifications=r.json())
+            return render_template('dashboard_administrador.html', receivers_modifications=r.json())
         elif r.status_code == 403:
             return redirect(url_for('login'))
         else:
@@ -50,10 +49,10 @@ def dashboard_admin():
         return redirect(url_for('login'))
 
 
-@app.route("/dashboard_consultor", methods=['GET'])
-def dashboard_consultor():
+@app.route("/dashboard_validador", methods=['GET'])
+def dashboard_validador():
     try:
-        return render_template('dashboard_consultor.html')
+        return render_template('dashboard_validador.html')
     except ValueError:
         return redirect(url_for('login'))
 
