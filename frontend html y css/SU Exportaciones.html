@@ -1,6 +1,5 @@
-<<!DOCTYPE html>
+<!DOCTYPE html>
   <html lang="en" dir="ltr">
-
   <head>
     <title>Administracion de Datos</title>
     <meta charset="utf-8">
@@ -10,10 +9,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   </head>
-
-
   <body class style="background-color: rgb(234,234,234)">
-    <!--Header-->
+        <!--Header-->
     <div class="container mh-20" alt="Max-height: 20%">
       <div class="row">
         <img class="img-fluid col-md-7" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png" height="119.36" width="508">
@@ -39,17 +36,7 @@
       <div class="row col-md-12">
         <h3 style="font-family: Helvetica Neue; font-size: 2rem;margin-bottom:30px;">Importar Documentos</h3>
       </div>
-      <div class="dropdown">
-        <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
-          Tipo de Archivo
-        </button>
-        <ul class="dropdown-menu">
-          <li><a href="#">ZAP Academy</a></li>
-          <li><a href="#">Jalisco te Reconoce</a></li>
-          <li><a href="#">Beneficiarios</a></li>
-        </ul>
-      </div>
-      <br>
+
       <div class="row col-md-12">
         <form method="POST" action="#" enctype="multipart/form-data">
           <div class="form-group">
@@ -70,7 +57,17 @@
               </script>
 
             </div>
+          <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
+              Tipo de Archivo
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">ZAP Academy</a></li>
+              <li><a href="#">Jalisco te Reconoce</a></li>
+              <li><a href="#">Beneficiarios</a></li>
+            </ul>
           </div>
+        </div>
           <div class="form-group">
             <button type="submit" class="btn btn-primary pull-right btn-sm" disabled>Importar</button>
             <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
@@ -81,7 +78,7 @@
         <h3 style="font-family: Helvetica Neue; font-size: 2rem;">Exportar Documentos</h3>
       </div>
       <div class="row col-md-12">
-        <div class="container col-md-3" style="margin-top: 30px; margin-bottom: 30px; ">
+        <div class="container col-md-3" style=" margin-bottom: 30px; ">
         </div>
         <div class="container col-md-9"> </div>
       </div>
