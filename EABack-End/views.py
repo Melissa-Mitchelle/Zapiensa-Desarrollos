@@ -4,7 +4,7 @@ from flask_security import login_required
 
 @app.route('/')
 def index():
-    return jsonify({'message': 'Hello, World!'})
+    return jsonify({'message': 'Welcome to the API Server!'})
 
 
 @app.route('/search')

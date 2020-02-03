@@ -1,5 +1,6 @@
-#contain
-{
-    background: red;
-    color: white;
+#data_filter label {
+    width: 100%;
+}
+#data_filter input {
+    width: 85%;
 }

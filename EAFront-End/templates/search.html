@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!--Formulario-->
+    <form action="buscar" method="post">
+    <div class="container mh-60" alt="Max-height: 60%">
+       <div class="row col-md-12">
+         <div class="container col-md-6">
+             <div class="input-group input-group-sm mb-3" style=" margin-top: 80px; margin-bottom: 80px; ">
+               <input type="text" name="search_data" class="form-control" placeholder="BUSQUEDA">
+               <div class="input-group-prepend" >
+                 <span class="input-group">
+                   <button type="button" class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
+                 </span>
+               </div>
+             </div>
+          <div class="row col-md-12" style="margin-top: 80px; margin-bottom: 80px;">
+           <!-- <div class=" container col-md-4 text-left">
+              <button type="button" class="btn btn-secondary btn-md" href="#" style="  color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Actualizar</button>
+            </div> -->
+            {% if session['role'] == "administrador" %}
+            <div class=" container col-md-4 text-right">
+              <a type="button" class="btn btn-secondary btn-md" href="/crearBeneficiario" style="  color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Crear</a>
+            </div>
+            {% endif %}
+          </div>
+       </div>
+    </div>
+  </div>
+    </form>
+    <!--Termina codigo Formulario-->
+  {% endblock %}

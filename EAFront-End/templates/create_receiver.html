@@ -1,0 +1,200 @@
+{% extends "layout.html" %}
+{% block content %}
+    <!--Formulario-->
+    <div class="container mh-60" alt="Max-height: 60%">
+        <form action="buscar" method="post">
+      <!--<div class="row col-md-12">
+        <div class="container col-md-3">
+          <div class="dropdown">
+            <input type="hidden" id="searchType" name="search_type">
+            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="margin-top: 10px; margin-bottom: 10px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
+              Tipo de Busqueda <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a data-search-type="general" href="">General</a></li>
+              <li><a data-search-type="curp" href="">CURP</a></li>
+              <li><a data-search-type="name" href="">Nombre Completo</a></li>
+              <li><a data-search-type="phone" href="">Telefono</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="container col-md-3">
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
+              style="margin-top: 10px; margin-bottom: 10px; color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));margin-left:65px;">Eventos</button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Evento 1</a></li>
+              <li><a href="#">Evento 2</a></li>
+              <li><a href="#">Evento 3</a></li>
+              <li><a href="#">Evento 4</a></li>
+              <li><a href="#">Evento 5</a></li>
+              <li><a href="#">Evento 6</a></li>
+              <div class="dropdown-divider"></div>
+              <li><a href="#" data-toggle="modal" data-target="#modal1">Agregar Evento</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="container col-md-6">
+          <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
+            <input type="text" class="form-control"  name="search_data" placeholder="BUSQUEDA">
+            <div class="input-group-prepend">              <span class="input-group">
+                <button type="submit" class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      -->
+          </form>
+      <form action="" method="post">
+      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="NOMBRE (S)" name="first_name"aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="APELLIDO PATERNO" name="last_name"aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="APELLIDO MATERNO" name="s_last_name" aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+            </div>
+            <input type="text" class="form-control" placeholder="CORREO ELECTRONICO" name="email" aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="TELEFONO 1" name="p_phone" aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+            </div>
+            <input type="text" class="form-control" placeholder="TELEFONO 2" name="s_phone"aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+      </div>
+      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="CURP" name="curp"aria-label="Small"aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+            </div>
+            <input type="number" class="form-control" placeholder="EDAD" name="age" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+      </div>
+       <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
+        <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+            </div>
+            <input type="text" class="form-control" placeholder="DIRECCION" name="address"  aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+         <div class="container col-md-5">
+          <div class="input-group input-group-sm mb-3">
+            <div class="input-group-prepend">
+            </div>
+            <input type="text" class="form-control" placeholder="CODIGO POSTAL" name="zip_code" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+          </div>
+        </div>
+       </div>
+      <!-- <div class="row col-md-12">
+        <div class="container col-md-5 ">
+          <div class="input-group-sm mb-3">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <input type="checkbox"aria-label="Checkbox for following text input">Asistencia
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container col-md-5">
+          <div class="dropdown">
+            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="margin-top: 10px; margin-bottom: 10px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
+              Seguimiento Llamada
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Llamada 1</a></li>
+              <li><a href="#">Llamada 2</a></li>
+              <li><a href="#">Llamada 3</a></li>
+              <li><a href="#">Confirmado</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      -->
+      <p class="text-right col-sm-11" style="font-family: Helvetica Neue; font-size: 1rem; color: #777;margin-top: 10px; margin-bottom: 10px;">* Campo obligatorio</p>
+      <div class="row col-md-12" style="margin-top: 10px; margin-bottom: 20px;">
+        <div class=" container col-md-4 text-left">
+          <button type="submit" class="btn btn-secondary btn-md" href="#" style="  color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Crear</button>
+        </div>
+        <div class=" container col-md-4 text-right">
+          <a type="button" class="btn btn-danger btn-md" href="dashboard">Cancelar</a>
+        </div>
+      </div>
+        </form>
+    </div>
+
+        <!--Formulario de otro evento -->
+          <div class="modal fade" id="modal1" tabindex="-1" role="dialog"aria-labelledby="modal1-label">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Nuevo Evento</h5>
+                  <button class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+
+                  <form>
+                    <div class="form">
+                      <label for="Nuevo Evento">Evento</label>
+                      <input type="text" placeholder="Nombre del Evento" class="form-control">
+                    </div>
+                  </form>
+                  <div class="modal-footer">
+                    <button class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));" data-dismiss="modal">Confirmar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--Termina codigo Formulario de otro evento -->
+    <!--Termina codigo Formulario-->
+  {% endblock %}

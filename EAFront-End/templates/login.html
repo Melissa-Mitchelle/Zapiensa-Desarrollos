@@ -1,73 +1,25 @@
-<!DOCTYPE html>
-  <html lang="en" dir="ltr">
-
-  <head>
-    <title>Login</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
-  </head>
-
-
-  <body class style="background-color: rgb(234,234,234)">
-    <!--Header-->
-    <div class="container mh-20" alt="Max-height: 20%">
-      <div class="row">
-        <img class="img-fluid col-md-7" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png" height="119.36" width="508">
-        <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: Helvetica Neue; font-size: 1.5rem; color: #777; text-decoration: underline;" <h2> Programa Beneficiarios <br> Asistencias </<h2>
-          </<p>
-      </div>
-      <div class="row col-md-12" style="margin-top: 30px; margin-bottom: 40px;">
-        <div class="container col-md-4">
-        </div>
-        <div class=" container col-md-8 text-right">
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Inicio</button>
-          </div>
-      </div>
-    </div>
- <!--Termina codigo Header-->
+{% extends "layout.html" %}
+{% block content %}
+    <!--Formulario-->
+ <form action="" method="post">
   <div class="container mh-60" alt="Max-height: 60%">
-     <div class="row col-md-12">
-       <form action="" method="post">
-       <div class="container col-md-6">
+     <div class="row col-md-12" style="margin-top:80px;margin-bottom:80px">
+       <div class="container col-md-5">
          <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
            <input type="text" class="form-control" name="username" placeholder="USUARIO">
          </div>
          <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
            <input type="password" class="form-control" name="password" placeholder="CONTRASEÑA">
          </div>
+       </div>
+          <div class="row col-md-9">
          <div class=" container col-md-12 text-right">
-             <button type="submit" class="btn btn-secondary btn-sm" href="#" style="margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Entrar</button>
+             <button type="submit" class="btn btn-secondary btn-sm" style="color: #fff;margin-right:15px;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Entrar</button>
         </div>
-         </form>
-        <br>
-        <br>
-        <br>
      </div>
   </div>
 </div>
-<!--Footer -->
-<footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
-<div class="container-fluid text-center text-md-left">
-<div class="row">
-  <div class="text-center col-md-5">
-  <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a" src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
-</div>
-<div class="container col-md-2 mb-md-0 mb-3"></div>
-  <div class="container col-md-5 mb-md-0 mb-3 text-left">
-      <h5 class="text-muted"style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
-      <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
-      <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
-        <br> webmaster@zapopan.gob.mx </p>
-    </div>
-  </div>
-  </div>
-  <p class="text-Center col-sm-11" style="font-size: 1rem; color: #777;margin-top: 5px; margin-bottom: 10px;">© 2014-2020. Zapiensa-Desarrollos</p>
-</footer>
+</form>
 
-</body>
-
-</html>
+    <!--Termina codigo Formulario-->
+     {% endblock %}

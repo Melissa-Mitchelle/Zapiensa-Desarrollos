@@ -1,9 +1,10 @@
-from marshmallow import fields, Schema
+from marshmallow import fields, Schema, pre_load
 from datetime import datetime
 from sqlalchemy import or_
-
+from marshmallow_sqlalchemy import ModelSchema
 from config import db
 from flask_security import UserMixin, RoleMixin
+from sqlalchemy.ext.associationproxy import association_proxy
 
 roles_users = db.Table('USERS_ROLES',
                        db.Column('id_user_role', db.Integer(), primary_key=True),
@@ -22,7 +23,6 @@ class UserModel(db.Model, UserMixin):
     username = db.Column(db.String(45), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(45), nullable=False)
-    #    id_role = db.Column(db.Integer, db.ForeignKey("roles.id_role"), nullable=False)
     is_active = db.Column(db.Boolean, nullable=False, default=True)
     created_user = db.Column(db.Integer, nullable=False)
     created_time = db.Column(db.TIMESTAMP, nullable=False, default=datetime.utcnow)
@@ -70,6 +70,7 @@ class UserModel(db.Model, UserMixin):
     def get_one_user(id_user):
         return UserModel.query.get(id_user)
 
+
 # Define the Role data-model
 class Roles(db.Model, RoleMixin):
     __tablename__ = 'ROLES'
@@ -113,70 +114,18 @@ class UserSchema(Schema):
     modified_user = fields.Integer(dump_only=True)
     modified_time = fields.DateTime(dump_only=True)
     roles = fields.Nested(RoleSchema, many=True, only=("role_name",))
-#    roles = fields.List(fields.Nested(RoleSchema), many=True)
 
 
-
-receivers_events = db.Table('RECEIVERS_EVENTS',
-                            db.Column("id_receiver_event", db.Integer(), primary_key=True,
-                                      nullable=False),
-                            db.Column("id_receiver", db.Integer(), db.ForeignKey("RECEIVERS.id_receiver"),
-                                      nullable=False),
-                            db.Column("id_event", db.Integer(), db.ForeignKey("EVENTS.id_event"), nullable=False))
-
-
-"""class ReceiversEvents(db.Model):
-    __tablename__ = 'receivers_events'
-    id = db.Column(db.Integer, primary_key=True)
-    id_receiver = db.Column(db.Integer(), db.ForeignKey("receivers.id_receiver"), nullable=False)
-    id_event = db.Column(db.Integer(), db.ForeignKey("events.id_event"), nullable=False)
-    event = db.relationship("Events", backref="receivers_events")
-"""
 
 class Events(db.Model):
     __tablename__ = 'EVENTS'
     id_event = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(256), nullable=False)
-#    receivers = db.relationship("ReceiverModel", secondary=ReceiversEvents.__tablename__, lazy="select", viewonly=True)
 
 
 class EventsSchema(Schema):
     id_event = fields.Int(dump_only=True)
     name = fields.Str(required=True)
-
-
-class Follows(db.Model):
-    __tablename__ = 'FOLLOWS'
-    id_follow = db.Column(db.Integer(), primary_key=True)
-    id_receiver_event = db.Column(db.Integer, db.ForeignKey("EVENTS.id_event"), nullable=False)
-    notification_no = db.Column(db.Integer, nullable=True)
-    notified = db.Column(db.Boolean, nullable=True)
-    id_user = db.Column(db.Integer, db.ForeignKey("USERS.id_user"), nullable=False)
-    modified_at = db.Column(db.DateTime)
-
-    def __init__(self, data):
-        self.id_receiver_event = data.get('id_receiver_event')
-        self.notification_no = data.get('notification_no')
-        self.notified = data.get('notified')
-        self.id_user = data.get('id_user')
-        self.modified_at = datetime.datetime.utcnow()
-
-    def create(self):
-        db.session.add(self)
-        db.session.commit()
-
-    def update(self, data):
-        for key, item in data.items():
-            setattr(self, key, item)
-        db.session.commit()
-
-    def delete(self):
-        db.session.delete(self)
-        db.session.commit()
-
-    @staticmethod
-    def get_all():
-        return Events.query.all()
 
 
 class ReceiverModel(db.Model):
@@ -198,8 +147,7 @@ class ReceiverModel(db.Model):
     created_time = db.Column(db.TIMESTAMP, nullable=False, default=datetime.utcnow)
     modified_user = db.Column(db.Integer, db.ForeignKey('USERS.id_user'), nullable=True)
     modified_time = db.Column(db.TIMESTAMP, nullable=True, default=datetime.utcnow, onupdate=datetime.utcnow)
-    events = db.relationship("Events", secondary=receivers_events, backref="RECEIVERS")
-
+    events = association_proxy('receivers_events', 'event')
 
     def __init__(self, data):
         self.first_name = data.get('first_name')
@@ -252,25 +200,96 @@ class ReceiverModel(db.Model):
         if method == "curp":
             return ReceiverModel.query.filter(ReceiverModel.curp.contains(search_data)).all()
         elif method == "name":
-            return ReceiverModel.query.filter((
-                                                      ReceiverModel.first_name + ' ' + ReceiverModel.last_name
-                                              ).like('{0}%'.format(search_data))).all()
+            print(search_data)
+            return ReceiverModel.query.filter(
+                (ReceiverModel.first_name + ' ' + ReceiverModel.last_name
+                 + ' ' + ReceiverModel.s_last_name
+                 ).contains(search_data)
+            ).all()
         elif method == "phone":
             return ReceiverModel.query.filter(or_(ReceiverModel.p_phone.contains(search_data),
                                                   ReceiverModel.s_phone.contains(search_data))).all()
+        elif method == "general":
+            return ReceiverModel.query.filter(or_(ReceiverModel.p_phone.contains(search_data),
+                                                  ReceiverModel.s_phone.contains(search_data),
+                                                  ReceiverModel.curp.contains(search_data),
+                                                  ReceiverModel.address.contains(search_data),
+                                                  ReceiverModel.zip_code.contains(search_data),
+                                                  ReceiverModel.email.contains(search_data),
+                                                  (
+                                                          ReceiverModel.first_name + ' ' + ReceiverModel.last_name
+                                                          + ' ' + ReceiverModel.s_last_name
+                                                  ).contains(search_data)
+                                                  )).all()
+
+
+class ReceiverFollows(db.Model):
+    __tablename__ = 'FOLLOWS'
+    id_follow = db.Column(db.Integer(), primary_key=True)
+    id_receiver_event = db.Column(db.Integer, db.ForeignKey("EVENTS.id_event"), nullable=False)
+    notification_no = db.Column(db.Integer, nullable=True)
+    notificated = db.Column(db.Boolean, nullable=True)
+    attendance = db.Column(db.Boolean, nullable=True)
+    id_user = db.Column(db.Integer, db.ForeignKey("USERS.id_user"), nullable=False)
+    modified_time = db.Column(db.DateTime)
+#    receiver = db.relationship('ReceiverModel')
+
+    def __init__(self, data):
+        self.id_receiver_event = data.get('id_receiver_event')
+        self.notification_no = data.get('notification_no')
+        self.notificated = data.get('notified')
+        self.attendance = data.get('attendance')
+        self.id_user = data.get('id_user')
+        self.modified_time = datetime.utcnow()
+        self.receiver = data.get('receiver')
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self, data):
+        for key, item in data.items():
+            setattr(self, key, item)
+        db.session.commit()
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
 
     @staticmethod
-    def general_search(search_data):
-        return ReceiverModel.query.filter(or_(ReceiverModel.p_phone.contains(search_data),
-                                              ReceiverModel.s_phone.contains(search_data),
-                                              ReceiverModel.curp.contains(search_data),
-                                              ReceiverModel.address.contains(search_data),
-                                              ReceiverModel.zip_code.contains(search_data),
-                                              ReceiverModel.email.contains(search_data),
-                                              (
-                                                      ReceiverModel.first_name + ' ' + ReceiverModel.last_name
-                                              ).contains(search_data)
-                                              )).all()
+    def get_all():
+        return ReceiverFollows.query.all()
+
+    @staticmethod
+    def get_by_id(id_follow):
+        return ReceiverFollows.query.get(id_follow)
+
+
+class ReceiverFollowsSchema(Schema):
+    id_follow = fields.Int(dump_only=True)
+    id_receiver_event = fields.Int(required=False)
+    id_user = fields.Int(required=True)
+    notification_no = fields.Int(required=False)
+    notificated = fields.Bool(required=False)
+    attendance = fields.Bool(required=False)
+    modified_time = fields.DateTime(dump_only=True)
+#    receiver = fields.Nested(ReceiverModel, many=True)
+    
+
+
+
+class ReceiversEvents(db.Model):
+    __tablename__ = 'RECEIVERS_EVENTS'
+    id_receiver_event = db.Column(db.Integer(), primary_key=True, nullable=False)
+    id_receiver = db.Column(db.Integer(), db.ForeignKey("RECEIVERS.id_receiver"), nullable=False)
+    id_event = db.Column(db.Integer(), db.ForeignKey("EVENTS.id_event"), nullable=False)
+    receiver = db.relationship('ReceiverModel', backref=db.backref('receivers_events', cascade='all, delete-orphan'))
+    event = db.relationship('Events')
+
+
+class ReceiverEventsSchema(ModelSchema):
+    class Meta:
+        model = ReceiversEvents
 
 
 class ReceiverSchema(Schema):
@@ -279,17 +298,17 @@ class ReceiverSchema(Schema):
     s_name = fields.Str(required=False)
     last_name = fields.Str(required=True)
     s_last_name = fields.Str(required=False)
-    age = fields.Int(required=False)
+    age = fields.Int(required=False, allow_none=True)
     curp = fields.Str(required=True)
     p_phone = fields.Int(required=True)
-    s_phone = fields.Int(required=False)
+    s_phone = fields.Int(required=False, allow_none=True)
     address = fields.Str(required=False)
     events = fields.Nested(EventsSchema, many=True)
     zip_code = fields.Int(required=False)
-    email = fields.Email(required=False)
-    created_user = fields.Int(required=True)
+    email = fields.Email(required=False, allow_none=True)
+    created_user = fields.Int(required=False)
     created_time = fields.DateTime(dump_only=True)
-    modified_user = fields.Int(required=True)
+    modified_user = fields.Int(required=False)
     modified_time = fields.DateTime(dump_only=True)
 
 
@@ -300,13 +319,14 @@ class ReceiverMirrorModel(db.Model):
     id_receiver = db.Column(db.Integer, db.ForeignKey("RECEIVERS.id_receiver"), nullable=False)
     first_name = db.Column(db.String(45), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
+    s_last_name = db.Column(db.String(45), nullable=False)
     age = db.Column(db.Integer, nullable=False)
     curp = db.Column(db.String(18), nullable=False)
     p_phone = db.Column(db.String(18), nullable=False)
     s_phone = db.Column(db.String(18), nullable=True)
     address = db.Column(db.String(250), nullable=False)
     zip_code = db.Column(db.Integer, nullable=True)
-    email = db.Column(db.String(45), nullable=False)
+    email = db.Column(db.String(45), nullable=True)
     modified_user = db.Column(db.Integer, db.ForeignKey("USERS.id_user"), nullable=False)
     modified_time = db.Column(db.TIMESTAMP, default=datetime.utcnow, onupdate=datetime.utcnow)
 
@@ -314,6 +334,7 @@ class ReceiverMirrorModel(db.Model):
         self.id_receiver = data.get('id_receiver')
         self.first_name = data.get('first_name')
         self.last_name = data.get('last_name')
+        self.s_last_name = data.get('s_last_name')
         self.age = data.get('age')
         self.curp = data.get('curp')
         self.p_phone = data.get('p_phone')
@@ -351,13 +372,13 @@ class ReceiverMirrorSchema(Schema):
     id_receiver = fields.Int(required=True)
     first_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
-    age = fields.Int(required=True)
+    s_last_name = fields.Str(required=True)
+    age = fields.Int(required=False)
     curp = fields.Str(required=True)
     p_phone = fields.Int(required=True)
     s_phone = fields.Str(required=False, allow_none=True)
-    address = fields.Str(required=True)
+    address = fields.Str(required=False)
     zip_code = fields.Int(required=False)
-    email = fields.Email(required=True)
+    email = fields.Email(required=False)
     modified_user = fields.Int(required=True)
     modified_time = fields.DateTime(dump_only=True)
-

@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% block maxSearchCols %}
+let lastSearchableCol = 5;
+let firstSearchableCol = 2;
+{% endblock %}
+{% block content %}
+    <!--Formulario-->
+    <div class="container mh-60" alt="Max-height: 60%">
+      <section>
+        <div class="table-responsive-sm text-middle" style=" margin-top: 30px; margin-bottom: 30px; ">
+          <table id="data" class="table text-middle">
+            <thead>
+              <tr class="table-secondary text-middle">
+                <th>Asistencia</th>
+                <th>Notificación</th>
+                <th>Nombre</th>
+                <th>CURP</th>
+                <th>Teléfono</th>
+                <th>Evento</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%for rf in receivers_follows %}
+              <tr data-id="{{rf['id_follow']}}" data-id-receiver-event="{{rf['id_receiver_event']}}">
+                <th scope="row">
+                  <div class="input-group-xl mb-3">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <input type="checkbox" class="attendancea" aria-label="Checkbox for following text input" {{'checked'|safe if rf['attendance']}}>
+                      </div>
+                    </div>
+                  </div>
+                </th>
+                <td>
+                  <div class="dropdown ">
+                    <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
+                      {% if rf['notificated'] %}
+                      Confirmado
+                      {% else %}
+                      {{ 'Llamada ' ~ rf['notification_no'] if rf['notification_no'] is not none else 'Llamadas' }}
+                      {% endif %}
+                    </button>
+                    <ul class="dropdown-menu notificationa"">
+                      <li><a data-notification="1" href="#">Llamada 1</a></li>
+                      <li><a data-notification="2" href="#">Llamada 2</a></li>
+                      <li><a data-notification="3" href="#">Llamada 3</a></li>
+                      <li><a data-notification="confirmed" href="#">Confirmado</a></li>
+                    </ul>
+                  </div>
+                </td>
+                <td>{{rf['first_name']}} {{rf['last_name']}} {{rf['s_last_name']}}</td>
+                <td>{{rf['curp']}}</td>
+                <td>{{rf['p_phone']}}</td>
+                <td>{{rf['event']}}</td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+      </section>
+      <!--<div class="row col-md-8" style=" margin-top: 15px; margin-bottom: 15px;">
+        <div class="container text-left">
+          <button type="button" class="btn btn-secondary btn-md" href="#" style="  color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Actualizar</button>
+        </div>
+      </div>-->
+    </div>
+
+    <!--Termina codigo Formulario-->
+     {% endblock %}

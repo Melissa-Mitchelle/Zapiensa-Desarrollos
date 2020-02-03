@@ -1,14 +1,19 @@
 import datetime
+import os
+from pathlib import Path
+
 import sqlalchemy
-from flask import request, json, render_template, Response, make_response, redirect, url_for, session
-from flask_restful import Resource, reqparse
-from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required, LoginForm
-from flask_login import current_user, LoginManager
+from flask import request, render_template, make_response, jsonify
+from flask_restful import Resource
+from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required
+from flask_login import current_user
 from flask_security.utils import hash_password
-from marshmallow import utils
 from config import app, db
-from models import UserModel, UserSchema, ReceiverModel,\
-    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, Roles
+from marshmallow import ValidationError
+from models import UserModel, UserSchema, ReceiverModel, \
+    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, \
+    Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
+from sqlalchemy.orm import aliased
 
 
 def clone_model(model):
@@ -20,27 +25,14 @@ def clone_model(model):
 
 
 cUserModel = clone_model(UserModel)
-print(cUserModel.__dict__)
 user_schema = UserSchema()
 receiver_schema = ReceiverSchema()
 receiver_mirror_schema = ReceiverMirrorSchema()
+receiver_follows_schema = ReceiverFollowsSchema()
+receiver_events_schema = ReceiverEventsSchema()
 user_datastore = SQLAlchemyUserDatastore(db, cUserModel, Roles)
 security = Security(app, user_datastore)
-#login_manager = LoginManager(app)
-#principals = Principal(app)
 
-
-"""@login_manager.user_loader
-def load_user(userid):
-    return user_datastore.find_user(id_user=userid)
-
-
-@principals.identity_loader
-def load_identity_from_weird_usecase():
-    if current_user.is_active:
-        identity = Identity(current_user.id_user)
-        return identity
-"""
 
 class CheckRole(Resource):
     @login_required
@@ -49,13 +41,78 @@ class CheckRole(Resource):
         return ser_user['roles'][0]['role_name']
 
 
-class Registros(Resource):
-    @login_required
+class CreateFollow(Resource):
+    def post(self):
+
+        req_data = request.get_json()
+        req_data.update({'id_user': current_user.id})
+        data = receiver_follows_schema.load(req_data)
+        try:
+            if len(ReceiverFollows.query.filter_by(id_receiver_event=data['id_receiver_event']).all()) > 0:
+                return {'message': 'El seguimiento {} ya existe'.format(data['id_receiver_event'])}
+            follow = ReceiverFollows(data)
+            follow.create()
+            return {
+                'message': 'Seguimiento creado'
+            }
+        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
+            return render_template('500.html', error=e), 500
+
+
+class FollowUpdate(Resource):
+    def put(self, id_follow):
+        qryresult = ReceiverFollows.get_by_id(id_follow)
+        if qryresult is not None:
+            req_data = request.get_json()
+            req_data.pop('id_follow')
+            data = receiver_follows_schema.load(req_data, partial=True)
+
+            try:
+                follow = ReceiverFollows.get_by_id(id_follow)
+                follow.update(data)
+                ser_follow = receiver_follows_schema.dump(follow)
+
+                return {
+                           'message': 'Seguimiento {} editado'.format(id_follow)
+                       }, 200
+            except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
+                return render_template('500.html', error=e), 500
+        else:
+            return {'message': 'No se encontro este seguimiento.'}, 403
+
+class Follows(Resource):
+    #    @login_required
     def get(self):
         try:
-            receivers = ReceiverModel.get_all_receivers()
-            ser_receivers = receiver_schema.dump(receivers, many=True)
-            return ser_receivers, 200
+
+            qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event, ReceiverFollows). \
+                outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+                outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+                outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+                all()
+            result = []
+            i = 0
+            for row in qryresult:
+                result.append({**receiver_schema.dump(row.ReceiverModel),
+                               **receiver_events_schema.dump(row.ReceiversEvents),
+                               **receiver_follows_schema.dump(row.ReceiverFollows),
+                               'event': row.name, 'id_event': row.id_event})
+                i += 1
+            return result, 200
+        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
+            print(e)
+            return render_template('500.html', error=e), 500
+
+
+class ReceiverDataById(Resource):
+    def get(self, id):
+        try:
+            receiver = ReceiverModel.get_one_receiver(id)
+            if receiver:
+                ser_receiver = receiver_schema.dump(receiver)
+                return ser_receiver, 200
+            else:
+                return {'message': 'Not found'}, 404
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
@@ -68,21 +125,7 @@ class ReceiverData(Resource):
                 ser_receiver = receiver_schema.dump(receiver, many=True)
                 return ser_receiver, 200
             else:
-                return {'message': 'User not found'}, 404
-        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
-            return render_template('500.html', error=e), 500
-
-
-class ReceiverDataGeneralSearch(Resource):
-    def get(self, search_data):
-        try:
-            receiver = ReceiverModel.general_search(search_data)
-            if receiver:
-                ser_receiver = receiver_schema.dump(receiver, many=True)
-                headers = {'Content-Type': 'text/html'}
-                return {'message': ser_receiver}
-            else:
-                return 'User not found'
+                return {'message': 'Not found'}, 404
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
@@ -96,7 +139,7 @@ class ReceiversByEvent(Resource):
                 headers = {'Content-Type': 'text/html'}
                 return {'message': ser_receiver}
             else:
-                return 'User not found'
+                return 'Not found.'
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
@@ -107,16 +150,15 @@ class ReceiverDataByCurpGuest(Resource):
             receiver = ReceiverModel.find_by_curp(curp)
             if receiver:
                 ser_receiver = receiver_schema.dump(receiver, many=True)
-                print(ser_receiver)
                 return [{key: value for (key, value) in item.items() if
-                        key in ['first_name', 'last_name', 'events', 'curp']} for item in ser_receiver], 200
+                         key in ['first_name', 'last_name', 'events', 'curp']} for item in ser_receiver], 200
             else:
-                return make_response('User not found', 404)
+                return make_response('Not found', 404)
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
 
-class ReceiverDataByCurp(Resource):
+"""class ReceiverDataByCurp(Resource):
     @login_required
     def get(self, curp):
         try:
@@ -125,17 +167,22 @@ class ReceiverDataByCurp(Resource):
                 ser_receiver = receiver_schema.dump(receiver, many=True)
                 return ser_receiver, 200
             else:
-                return make_response('User not found', 404)
+                return make_response('Not found', 404)
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
+"""
+
 
 class CreateUser(Resource):
-    #    @roles_required('ADMINISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def post(self):
         req_data = request.get_json()
-        data = user_schema.load(req_data)
-
+        req_data['created_user'] = current_user.id
+        try:
+            data = user_schema.load(req_data)
+        except ValidationError as err:
+            return err.messages, 500
         try:
             if UserModel.find_by_username(data['username']):
                 return {'message': 'User {} already exists'.format(data['username'])}
@@ -150,7 +197,7 @@ class CreateUser(Resource):
 
 
 class DeleteUser(Resource):
-    @roles_required('ADMINISTRADORISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def delete(self, id_user):
         try:
             user = UserModel.get_one_user(id_user)
@@ -184,8 +231,11 @@ class EditUser(Resource):
 class CreateReceiver(Resource):
     def post(self):
         req_data = request.get_json()
-        data = receiver_schema.load(req_data)
-
+        req_data.update({'created_user': current_user.id})
+        try:
+            data = receiver_schema.load(req_data)
+        except ValidationError as err:
+            return err.messages, 500
         try:
             if ReceiverModel.find_by_curp(data['curp']):
                 return {'message': 'Receiver {} already exists'.format(data['curp'])}
@@ -231,17 +281,30 @@ class EditReceiver(Resource):
 
 
 class CreateReceiverMirror(Resource):
-    #    @roles_required('VALIDADOR')
+    @roles_required('VALIDADOR')
     def post(self):
         req_data = request.get_json()
+        req_data.update({'modified_user': current_user.id})
         data = receiver_mirror_schema.load(req_data)
         try:
             receiver = ReceiverMirrorModel(data)
             receiver.create()
             ser_receiver = receiver_mirror_schema.dump(receiver)
-
             return {
                        'message': 'Beneficiario espejo {} creado'.format(ser_receiver['curp'])
+                   }, 200
+        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
+            return render_template('500.html', error=e), 500
+
+
+class CancelReceiverModification(Resource):
+    @roles_required('ADMINISTRADOR')
+    def get(self, id_receiver):
+        receiver_mirror = ReceiverMirrorModel.get_one_receiver(id_receiver)
+        try:
+            ReceiverMirrorModel.delete(receiver_mirror)
+            return {
+                       'message': 'Beneficiario espejo {} creado'.format(id_receiver)
                    }, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
@@ -268,8 +331,9 @@ class ApproveReceiverModification(Resource):
         ser_receiver_id = ser_receiver_mirror['id_receiver']
         ser_receiver_mirror.pop('id_receiver_mirror')
         ser_receiver_mirror.pop('id_receiver')
-        ser_receiver_mirror.pop('created_at')
-        ser_receiver_mirror['modified_at'] = str(datetime.datetime.utcnow())
+        ser_receiver_mirror.pop('modified_time')
+        #        ser_receiver_mirror.pop('created_time')
+        #        ser_receiver_mirror['modified_time'] = str(datetime.datetime.utcnow())
         data = receiver_schema.load(ser_receiver_mirror)
         try:
             receiver = ReceiverModel.get_one_receiver(ser_receiver_id)
@@ -280,6 +344,17 @@ class ApproveReceiverModification(Resource):
             return {
                        'message': 'Beneficiario {} editado'.format(ser_receiver['curp'])
                    }, 200
+        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
+            return render_template('500.html', error=e), 500
+
+
+class ImportFromSheet(Resource):
+    #    @roles_required('ADMINISTRADOR')
+    def get(self, filename):
+        try:
+            dirname = os.path.dirname(__file__)
+            filename_path = os.path.join(dirname, '../shared/' + filename)
+            return jsonify({"result": filename_path.absolute()})
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 

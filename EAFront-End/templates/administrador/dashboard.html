@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block maxSearchCols %}
+let lastSearchableCol = 2;
+let firstSearchableCol = 0;
+{% endblock %}
+{% block content %}
+    <!--Formulario-->
+    <div class="container mh-60" alt="Max-height: 60%">
+      <section>
+        <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
+          <table id="data" class="table">
+            <thead>
+              <tr class="table-secondary">
+                <th>Original</th>
+                <th>Modificacion</th>
+                <th>Accion</th>
+              </tr>
+            </thead>
+            <span>
+            {%for rm in receivers_modifications %}
+              <tr>
+              <span>
+                <td>{{rm['receiver']['first_name']}} {{rm['receiver']['last_name']}} {{rm['receiver']['s_last_name'] if rm['receiver']['s_last_name'] is not none}}, <br>
+                  {% if rm['receiver']['age'] is not none %} {{ rm['receiver']['age'] }}, <br> {% endif %}
+                  {{rm['receiver']['curp']}}, <br>{% if rm['receiver']['email'] is not none %} {{ rm['receiver']['email'] }}, <br> {% endif %}
+                  {% if rm['receiver']['p_phone'] is not none %} {{ rm['receiver']['p_phone'] }}, <br> {% endif %}
+                  {% if rm['receiver']['s_phone'] is not none %} {{ rm['receiver']['s_phone'] }}, <br> {% endif %}
+                  {% if rm['receiver']['address'] is not none %} {{ rm['receiver']['address'] }}, <br> {% endif %}
+                  {% if rm['receiver']['zip_code'] is not none %} {{ rm['receiver']['zip_code'] }} <br> {% endif %}
+                </td>
+                 <td>
+                    <span {% if rm['receiver']['first_name'] != rm['mirror']['first_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['first_name']}}</span>
+                    <span {% if rm['receiver']['last_name'] != rm['mirror']['last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['last_name']}}</span>
+                    <span {% if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['s_last_name'] ~ ', </span><br>'|safe if rm['mirror']['s_last_name'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] }}
+                    <span {% if rm['receiver']['age'] != rm['mirror']['age'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['age'] ~ ', </span><br>'|safe if rm['mirror']['age'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['age'] != rm['mirror']['age'] }}
+                    <span {% if rm['receiver']['curp'] != rm['mirror']['curp'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['curp'] if rm['mirror']['curp'] is not undefined else 'nulo' if rm['receiver']['curp'] != rm['mirror']['curp'] }}</span>, <br>
+                    <span {% if rm['receiver']['email'] != rm['mirror']['email'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['email'] ~ ', </span><br>'|safe if rm['mirror']['email'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['email'] != rm['mirror']['email'] }}
+                    <span {% if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['p_phone'] if rm['mirror']['p_phone'] is not undefined else 'nulo' if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] }}</span>, <br>
+                    <span {% if rm['receiver']['s_phone'] != rm['mirror']['s_phone'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['s_phone'] + ', </span><br>'|safe if rm['mirror']['s_phone'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['s_phone'] != rm['mirror']['s_phone'] }}
+                    <span {% if rm['receiver']['address'] != rm['mirror']['address'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['address'] + ', </span><br>'|safe if rm['mirror']['address'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['address'] != rm['mirror']['address'] }}
+                    <span {% if rm['receiver']['zip_code'] != rm['mirror']['zip_code'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['zip_code'] ~ ', </span><br>'|safe if rm['mirror']['zip_code'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['zip_code'] != rm['mirror']['zip_code'] }}
+              <td><div class="btn-group " style="margin-top: 30px; margin-bottom: 30px;"> <a href="javascript:void(0)" data-metodo="aprobar" data-id="{{rm['mirror']['id_receiver_mirror']}}" class="aaction btn btn-outline-primary border btn-sm" style="	border-color: #757575;">Aprobar</a> <a href="javascript:void(0)" data-metodo="cancelar" data-id="{{rm['mirror']['id_receiver_mirror']}}" class="aaction btn btn-outline-primary border text-danger btn-sm" style="	border-color: #757575;">Cancelar</a> </div></td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+      </section>
+</div>
+
+    <!--Termina codigo Formulario-->
+     {% endblock %}

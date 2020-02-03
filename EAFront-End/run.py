@@ -1,13 +1,89 @@
 import requests
-from flask import Flask, render_template, send_from_directory, request, url_for, redirect, make_response, session
+from flask import Flask, \
+    render_template, send_from_directory, request, url_for, redirect, make_response, session, jsonify, flash
+from jinja2 import Template
+import json
 
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
 
+def verify_session(fn):
+    def inner(*args, **kwargs):
+        if not 'role' in session:
+            return redirect(url_for('login') + '?siguiente=' + request.path)
+        return fn(*args, **kwargs)
+
+    inner.__name__ = fn.__name__
+    return inner
+
+
 @app.route("/")
 def index():
     return render_template('index.html')
+
+
+@app.route("/seguimiento", methods=['POST'])
+@verify_session
+def follow():
+    payload = {
+        key: value[0] if len(value) == 1 else value
+        for key, value in request.form.items()
+    }
+    payload = {k: v for k, v in payload.items() if v != ''}
+    if 'id_follow' in request.form:
+        r = requests.put('http://localhost:5002/followUpdate/' + request.form['id_follow'],
+                         json=payload,
+                         headers={'Authentication-Token': session['api_session_token']}
+                         )
+        return r.text
+    else:
+        r = requests.post('http://localhost:5002/createFollow',
+                          json=payload,
+                          headers={'Authentication-Token': session['api_session_token']}
+                          )
+        return r.text
+
+
+@app.route("/seguimientos")
+@verify_session
+def follows():
+    r2 = requests.get('http://localhost:5002/follows')
+    return render_template('follows.html', receivers_follows=r2.json())
+
+
+@app.route("/crearUsuario", methods=['GET', 'POST'])
+@verify_session
+def create_user():
+    if request.method == 'GET':
+        return render_template(session['role'] + '/create_user.html')
+    if request.method == 'POST':
+        payload = {
+            key: value[0] if len(value) == 1 else value
+            for key, value in request.form.items()
+        }
+        payload = {k: v for k, v in payload.items() if v != ''}
+        print(payload)
+        r = requests.post('http://localhost:5002/createUser',
+                          json=payload,
+                          headers={'Authentication-Token': session['api_session_token']}
+                          )
+        if r.ok:
+            flash(r.json()['message'])
+            return render_template(session['role'] + '/create_user.html')
+        else:
+            for e in r.json():
+                flash(r.json()[e][0] + ' ' + e)
+            return render_template(session['role'] + '/create_user.html')
+
+
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    r = requests.get("http://localhost:5002/logout",
+                     headers={'Authentication-Token': session['api_session_token']})
+    session.pop('role')
+    session.pop('api_session_token')
+    return redirect('/')
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -23,45 +99,140 @@ def login():
                 token = r.json()['response']['user']['authentication_token']
                 session['api_session_token'] = token
                 r2 = s.get('http://localhost:5002/checkrole')
-                session['role'] = r2.text.replace('"','').replace('\n','')
-                return redirect(url_for('dashboard_' + session['role'].lower()))
+                session['role'] = r2.text.replace('"', '').replace('\n', '').lower()
+                if 'siguiente' in request.args:
+                    return redirect(request.args['siguiente'])
+                else:
+                    return redirect('/dashboard')
             else:
-                return r.content
+                for e in r.json()['response']['errors']:
+                    flash(r.json()['response']['errors'][e][0])
+                return render_template('login.html')
 
 
-@app.route("/dashboard_administrador", methods=['GET'])
-def dashboard_administrador():
-    try:
-        token = session['api_session_token']
-        r = requests.get('http://localhost:5002/receiversModifications',
-                         headers={'Authentication-Token': token})
+@app.route("/crearBeneficiario", methods=['GET', 'POST'])
+@verify_session
+def create_receiver():
+    if request.method == 'GET':
+        return render_template('create_receiver.html')
+    elif request.method == 'POST':
+        payload = {
+            key: value[0] if len(value) == 1 else value
+            for key, value in request.form.items()
+        }
+        payload = {k: v for k, v in payload.items() if v != ''}
+        r = requests.post('http://localhost:5002/createReceiver',
+                          json=payload,
+                          headers={'Authentication-Token': session['api_session_token']}
+                          )
         if r.ok:
-            return render_template('dashboard_administrador.html', receivers_modifications=r.json())
-        elif r.status_code == 403:
-            return redirect(url_for('login'))
+            flash(r.json()['message'])
+            return render_template('create_receiver.html')
         else:
-            return r.content, 500
-    except ValueError:
-        return redirect(url_for('login'))
+            for e in r.json():
+                flash(r.json()[e][0] + ' ' + e)
+            return render_template('create_receiver.html')
 
 
-@app.route("/dashboard_validador", methods=['GET'])
+@app.route("/dashboard", methods=['GET'])
+@verify_session
 def dashboard_validador():
+    role = session['role']
     try:
-        return render_template('dashboard_validador.html')
+        if role == 'administrador':
+            r = requests.get('http://localhost:5002/receiversModifications',
+                             headers={'Authentication-Token': session['api_session_token']})
+            if r.ok:
+                return render_template(role + '/dashboard.html', receivers_modifications=r.json())
+            elif r.status_code == 403:
+                return redirect(url_for('login'))
+            else:
+                return r.content, 500
+        else:
+            return render_template(role + '/dashboard.html')
     except ValueError:
         return redirect(url_for('login'))
 
 
-@app.route("/search", methods=['GET'])
+@app.route("/buscar", methods=['GET', 'POST'])
 def search():
-    curp = request.args['curp']
-    if curp:
-        r = requests.get('http://localhost:5002/CurpsGuest/' + curp)
+    if request.method == 'GET':
+        if 'curp' in request.args and 'role' not in session:
+            curp = request.args['curp']
+            r = requests.get('http://localhost:5002/CurpsGuest/' + curp)
+            if r.ok:
+                return render_template('anonymous_search_result.html', receivers=r.json())
+            else:
+                flash(r.text)
+                return render_template('index.html')
+        elif 'role' in session:
+            return render_template('search.html')
+        else:
+            return render_template('index.html')
+
+
+    elif request.method == 'POST':
+        if 'search_type' in request.form:
+            search_type = request.form['search_type']
+        else:
+            search_type = "general"
+        r = requests.get(
+            'http://localhost:5002/searchReceiver/' + search_type + '/' + request.form['search_data'],
+            headers={'Authentication-Token': session['api_session_token']})
         if r.ok:
             return render_template('search_result.html', receivers=r.json())
         else:
-            return render_template('index.html', message=r.text)
+            flash(r.json()['message'])
+            return render_template('search.html')
+
+
+@app.route("/modificacion", methods=['POST'])
+@verify_session
+def modificacion():
+    if request.form['metodo'] == 'aprobar':
+        r = requests.get('http://localhost:5002/approveReceiverModification/' + request.form['id'],
+                         headers={'Authentication-Token': session['api_session_token']})
+        if r.ok:
+            return "Satisfactorio", 200
+        else:
+            return "Error", r.status_code
+    elif request.form['metodo'] == 'cancelar':
+        r = requests.get('http://localhost:5002/cancelReceiverModification/' + request.form['id'],
+                         headers={'Authentication-Token': session['api_session_token']})
+        if r.ok:
+            return "Satisfactorio", 200
+        else:
+            return "Error", r.status_code
+
+@app.route("/editarBeneficiario", methods=['GET', 'POST'])
+@verify_session
+def edit_receiver():
+    if request.method == 'GET':
+        if 'id' in request.args:
+            r = requests.get('http://localhost:5002/receiver/' + request.args['id'],
+                             headers={'Authentication-Token': session['api_session_token']})
+            return render_template('edit_receiver.html', receiver=r.json())
+        else:
+            return 'No se encontro el usuario.'
+    elif request.method == 'POST':
+        payload = {
+            key: value[0] if len(value) == 1 else value
+            for key, value in request.form.items()
+        }
+        payload = {k: v for k, v in payload.items() if v != ''}
+        if session['role'] == "administrador":
+            payload.pop('id_receiver')
+            r = requests.put('http://localhost:5002/editReceiver/' + request.args['id'],
+                             json=payload,
+                             headers={'Authentication-Token': session['api_session_token']}
+                             )
+        elif session['role'] == "validador":
+            r = requests.post('http://localhost:5002/createReceiverMirror',
+                              json=payload,
+                              headers={'Authentication-Token': session['api_session_token']}
+                              )
+        flash(r.json()['message'])
+        return render_template('search.html')
 
 
 @app.route('/css/<path:path>')
@@ -85,4 +256,4 @@ def send_js(path):
 
 
 if __name__ == '__main__':
-    app.run(port='80')
+    app.run(port='8080')
