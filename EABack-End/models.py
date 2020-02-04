@@ -1,10 +1,14 @@
-from marshmallow import fields, Schema, pre_load
+from marshmallow import fields, Schema
 from datetime import datetime
 from sqlalchemy import or_
 from marshmallow_sqlalchemy import ModelSchema
 from config import db
 from flask_security import UserMixin, RoleMixin
 from sqlalchemy.ext.associationproxy import association_proxy
+
+fields.Field.default_error_messages["required"] = "Este campo es requerido."
+fields.Field.default_error_messages["null"] = "Por favor completa este campo."
+fields.Field.default_error_messages["validator_failed"] = "Valor invalido."
 
 roles_users = db.Table('USERS_ROLES',
                        db.Column('id_user_role', db.Integer(), primary_key=True),

@@ -1,6 +1,14 @@
 let table;
 
 $(document).ready(function () {
+
+        $(document)
+    .ajaxStart(function() {
+        $('#overlay').show();
+    })
+    .ajaxStop(function() {
+        $('#overlay').hide();
+    })
     //$('#data thead tr').clone(true).appendTo('#data thead');
     $('#data thead tr:eq(0) th').each(function (i) {
         if(firstSearchableCol <= i && i < lastSearchableCol){
@@ -20,7 +28,7 @@ $(document).ready(function () {
     table = $('#data').DataTable({
         orderCellsTop: true,
         fixedHeader: true,
-        "pageLength": 3,
+        "pageLength": 10,
         "ordering": true,
         "language": {
             "url": "https://cdn.datatables.net/plug-ins/1.10.20/i18n/Spanish.json",
@@ -29,6 +37,8 @@ $(document).ready(function () {
             //{ "orderable": false, "targets": [ 3 ] }
         ]
     });
+        $('#overlay').hide()
+
     $(".aaction").on("click", function (event) {
         event.preventDefault()
         let id = $(this).data('id');
@@ -44,7 +54,6 @@ $(document).ready(function () {
             },
             success: function (data) {
                 table.row(rowSelector).remove().draw();
-                alert(data);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Ocurrio un error " + textStatus + errorThrown);
@@ -76,7 +85,6 @@ $(document).ready(function () {
             data: data,
             success: function (data) {
                 $(thisA[0]).parent().parent().prev().html($(thisA[0]).html() + '<span class="caret"></span>');
-                alert(data);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Ocurrio un error " + textStatus + errorThrown);
@@ -87,7 +95,7 @@ $(document).ready(function () {
         event.preventDefault()
         let id = $(this).closest('tr').data('id');
         let id_receiver_event = $(this).closest('tr').data('id-receiver-event');
-        let attendance = $(this).val();
+        let attendance = $(this).is(":checked");
         let thisA = $(this);
         let data = {
             id_receiver_event: id_receiver_event,
@@ -97,7 +105,7 @@ $(document).ready(function () {
         if (id !== '') {
             data['id_follow'] = id
         }
-        $(this).prop("disabled", true);
+
         $.ajax({
             type: "POST",
             url: "/seguimiento",
@@ -105,12 +113,12 @@ $(document).ready(function () {
             data: data,
             success: function (data) {
                 $(thisA[0]).prop('checked', !$(thisA[0]).prop('checked'))
-                alert(data);
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("Ocurrio un error " + textStatus + errorThrown);
             }
         });
-        $(this).prop("disabled", false);
     });
+
+;
 });

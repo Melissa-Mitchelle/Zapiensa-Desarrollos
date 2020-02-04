@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
-
+{% block title %}
+Resultados
+{% endblock %}
 {% block content %}
   <div class="container mh-60" alt="Max-height: 60%">
      <div class="row col-md-12">
@@ -30,7 +32,7 @@
                 {% for receiver in receivers %}
                   {% for event in receiver.events %}
                     <tr>
-                      <td>{{receiver.first_name}} {{receiver.last_name}}</td>
+                      <td>{{receiver.first_name}} {{receiver.last_name}} {{receiver.s_last_name if receiver.s_last_name is not none}}</td>
                       <td>{{receiver.curp}}</td>
                       <td>{{event.name}}</td>
                     </tr>

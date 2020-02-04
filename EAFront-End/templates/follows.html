@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block title %}
+Seguimientos
+{% endblock %}
 {% block maxSearchCols %}
 let lastSearchableCol = 5;
 let firstSearchableCol = 2;
@@ -48,7 +51,7 @@ let firstSearchableCol = 2;
                     </ul>
                   </div>
                 </td>
-                <td>{{rf['first_name']}} {{rf['last_name']}} {{rf['s_last_name']}}</td>
+                <td>{{rf['first_name']}} {{rf['last_name']}} {{rf['s_last_name'] if rf['s_last_name'] is not none}}</td>
                 <td>{{rf['curp']}}</td>
                 <td>{{rf['p_phone']}}</td>
                 <td>{{rf['event']}}</td>

@@ -1,4 +1,7 @@
 {% extends "layout.html" %}
+{% block title %}
+Resultados de busqueda
+{% endblock %}
 {% block maxSearchCols %}
 let lastSearchableCol = 4;
 let firstSearchableCol = 0;
@@ -21,12 +24,14 @@ let firstSearchableCol = 0;
             <tbody>
               {%for r in receivers %}
               <tr>
-                <td>{{r['first_name']}} {{r['last_name']}} {{r['s_last_name']}}</td>
+                <td>{{r['first_name']}} {{r['last_name']}} {{r['s_last_name'] if r['s_last_name'] is not none}}</td>
                 <td>{{r['curp']}}</td>
                 <td>{{r['p_phone']}}</td>
                 <td>{%for e in r['events']%}{{e['name']}}<br>{% endfor %}</td>
                 <td>
+                {% if session['role'] in ['administrador', 'validador'] %}
                 <a href="editarBeneficiario?id={{r['id_receiver']}}" data-type="follow" name="edit" class="button green_btn"><i class="fas fa-edit"></i></a>
+                {% endif %}
                 </td>
               </tr>
             {% endfor %}

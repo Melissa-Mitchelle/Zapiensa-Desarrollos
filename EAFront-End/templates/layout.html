@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html lang="en" dir="ltr">
   <head>
-    <title>SU Actualizar</title>
+    <title>{% block title %}{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -63,6 +63,11 @@
             {% block content %}{% endblock %}
         <!--Termima codigo Content-->
     <!--Footer -->
+    <div id="overlay">
+	<div class="cv-spinner">
+		<span class="spinner"></span>
+	</div>
+</div>
     <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
   <div class="container-fluid text-center text-md-left">
     <div class="row ">

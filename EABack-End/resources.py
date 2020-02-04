@@ -42,10 +42,14 @@ class CheckRole(Resource):
 
 
 class CreateFollow(Resource):
+    @login_required
     def post(self):
 
         req_data = request.get_json()
         req_data.update({'id_user': current_user.id})
+        errors = receiver_follows_schema.validate(req_data)
+        if errors:
+            return errors, 500
         data = receiver_follows_schema.load(req_data)
         try:
             if len(ReceiverFollows.query.filter_by(id_receiver_event=data['id_receiver_event']).all()) > 0:
@@ -60,11 +64,16 @@ class CreateFollow(Resource):
 
 
 class FollowUpdate(Resource):
+    @login_required
     def put(self, id_follow):
         qryresult = ReceiverFollows.get_by_id(id_follow)
         if qryresult is not None:
             req_data = request.get_json()
+            req_data['id_user'] = current_user.id
             req_data.pop('id_follow')
+            errors = receiver_follows_schema.validate(req_data)
+            if errors:
+                return errors, 500
             data = receiver_follows_schema.load(req_data, partial=True)
 
             try:
@@ -81,10 +90,9 @@ class FollowUpdate(Resource):
             return {'message': 'No se encontro este seguimiento.'}, 403
 
 class Follows(Resource):
-    #    @login_required
+    @login_required
     def get(self):
         try:
-
             qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event, ReceiverFollows). \
                 outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
                 outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
@@ -100,11 +108,11 @@ class Follows(Resource):
                 i += 1
             return result, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
-            print(e)
             return render_template('500.html', error=e), 500
 
 
 class ReceiverDataById(Resource):
+    @login_required
     def get(self, id):
         try:
             receiver = ReceiverModel.get_one_receiver(id)
@@ -118,6 +126,7 @@ class ReceiverDataById(Resource):
 
 
 class ReceiverData(Resource):
+    @login_required
     def get(self, method, search_data):
         try:
             receiver = ReceiverModel.find(method, search_data)
@@ -131,6 +140,7 @@ class ReceiverData(Resource):
 
 
 class ReceiversByEvent(Resource):
+    @login_required
     def get(self, event_id):
         try:
             receiver = ReceiverModel.get_by_event(event_id)
@@ -158,31 +168,15 @@ class ReceiverDataByCurpGuest(Resource):
             return render_template('500.html', error=e), 500
 
 
-"""class ReceiverDataByCurp(Resource):
-    @login_required
-    def get(self, curp):
-        try:
-            receiver = ReceiverModel.find_by_curp(curp)
-            if receiver:
-                ser_receiver = receiver_schema.dump(receiver, many=True)
-                return ser_receiver, 200
-            else:
-                return make_response('Not found', 404)
-        except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
-            return render_template('500.html', error=e), 500
-
-"""
-
-
 class CreateUser(Resource):
     @roles_required('ADMINISTRADOR')
     def post(self):
         req_data = request.get_json()
         req_data['created_user'] = current_user.id
-        try:
-            data = user_schema.load(req_data)
-        except ValidationError as err:
-            return err.messages, 500
+        errors = user_schema.validate(req_data)
+        if errors:
+            return errors, 500
+        data = user_schema.load(req_data)
         try:
             if UserModel.find_by_username(data['username']):
                 return {'message': 'User {} already exists'.format(data['username'])}
@@ -214,6 +208,9 @@ class EditUser(Resource):
     @roles_required('ADMINISTRADORISTRADOR')
     def put(self, id_user):
         req_data = request.get_json()
+        errors = user_schema.validate(req_data)
+        if errors:
+            return errors, 500
         data = user_schema.load(req_data, partial=True)
 
         try:
@@ -229,13 +226,14 @@ class EditUser(Resource):
 
 
 class CreateReceiver(Resource):
+    @roles_required('ADMINISTRADORISTRADOR')
     def post(self):
         req_data = request.get_json()
         req_data.update({'created_user': current_user.id})
-        try:
-            data = receiver_schema.load(req_data)
-        except ValidationError as err:
-            return err.messages, 500
+        errors = receiver_schema.validate(req_data)
+        if errors:
+            return errors, 500
+        data = receiver_schema.load(req_data)
         try:
             if ReceiverModel.find_by_curp(data['curp']):
                 return {'message': 'Receiver {} already exists'.format(data['curp'])}
@@ -266,6 +264,9 @@ class EditReceiver(Resource):
     @roles_required('ADMINISTRADOR')
     def put(self, id_receiver):
         req_data = request.get_json()
+        errors = receiver_schema.validate(req_data)
+        if errors:
+            return errors, 500
         data = receiver_schema.load(req_data, partial=True)
 
         try:
@@ -285,6 +286,9 @@ class CreateReceiverMirror(Resource):
     def post(self):
         req_data = request.get_json()
         req_data.update({'modified_user': current_user.id})
+        errors = receiver_mirror_schema.validate(req_data)
+        if errors:
+            return errors, 500
         data = receiver_mirror_schema.load(req_data)
         try:
             receiver = ReceiverMirrorModel(data)
@@ -324,6 +328,7 @@ class ReceiversModifications(Resource):
 
 
 class ApproveReceiverModification(Resource):
+    @roles_required('ADMINISTRADORISTRADOR')
     def get(self, id_receiver):
 
         receiver_mirror = ReceiverMirrorModel.get_one_receiver(id_receiver)
@@ -347,7 +352,7 @@ class ApproveReceiverModification(Resource):
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
-
+"""
 class ImportFromSheet(Resource):
     #    @roles_required('ADMINISTRADOR')
     def get(self, filename):
@@ -357,7 +362,7 @@ class ImportFromSheet(Resource):
             return jsonify({"result": filename_path.absolute()})
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
-
+"""
 
 class Unauthorized(Resource):
     def get(self):

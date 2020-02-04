@@ -1,11 +1,22 @@
 import requests
 from flask import Flask, \
     render_template, send_from_directory, request, url_for, redirect, make_response, session, jsonify, flash
-from jinja2 import Template
-import json
+from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = 'secret_key'
+app.secret_key = 'ZAP/IENSA'
+app.permanent_session_lifetime = timedelta(minutes=15)
+fields_translation = {'first_name': "Nombre",
+                      'last_name': "Apellido Paterno",
+                      's_last_name': "Apellido Materno",
+                      'email': "Correo electronico",
+                      'password': "Contraseña",
+                      'username': "Nombre de usuario",
+                      'curp': "CURP",
+                      'zip_code': "Codigo Postal",
+                      'address': "Dirección",
+                      'p_phone': "Telefono 1",
+                      }
 
 
 def verify_session(fn):
@@ -30,7 +41,10 @@ def follow():
         key: value[0] if len(value) == 1 else value
         for key, value in request.form.items()
     }
-    payload = {k: v for k, v in payload.items() if v != ''}
+    for key, value in payload.items():
+        if value == "":
+            payload[key] = None
+    print(payload)
     if 'id_follow' in request.form:
         r = requests.put('http://localhost:5002/followUpdate/' + request.form['id_follow'],
                          json=payload,
@@ -48,7 +62,7 @@ def follow():
 @app.route("/seguimientos")
 @verify_session
 def follows():
-    r2 = requests.get('http://localhost:5002/follows')
+    r2 = requests.get('http://localhost:5002/follows', headers={'Authentication-Token': session['api_session_token']})
     return render_template('follows.html', receivers_follows=r2.json())
 
 
@@ -62,8 +76,10 @@ def create_user():
             key: value[0] if len(value) == 1 else value
             for key, value in request.form.items()
         }
-        payload = {k: v for k, v in payload.items() if v != ''}
-        print(payload)
+        for key, value in payload.items():
+            if value == "":
+                payload[key] = None
+
         r = requests.post('http://localhost:5002/createUser',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
@@ -73,7 +89,7 @@ def create_user():
             return render_template(session['role'] + '/create_user.html')
         else:
             for e in r.json():
-                flash(r.json()[e][0] + ' ' + e)
+                flash(r.json()[e][0] + ' ' + fields_translation[e])
             return render_template(session['role'] + '/create_user.html')
 
 
@@ -105,8 +121,9 @@ def login():
                 else:
                     return redirect('/dashboard')
             else:
-                for e in r.json()['response']['errors']:
-                    flash(r.json()['response']['errors'][e][0])
+                print(r.json())
+                """for e in r.json()['response']['errors']:
+                    flash(r.json()['response']['errors'][e][0])"""
                 return render_template('login.html')
 
 
@@ -120,7 +137,9 @@ def create_receiver():
             key: value[0] if len(value) == 1 else value
             for key, value in request.form.items()
         }
-        payload = {k: v for k, v in payload.items() if v != ''}
+        for key, value in payload.items():
+            if value == "":
+                payload[key] = None
         r = requests.post('http://localhost:5002/createReceiver',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
@@ -130,7 +149,7 @@ def create_receiver():
             return render_template('create_receiver.html')
         else:
             for e in r.json():
-                flash(r.json()[e][0] + ' ' + e)
+                flash(r.json()[e][0] + ' ' + fields_translation[e])
             return render_template('create_receiver.html')
 
 
@@ -219,7 +238,9 @@ def edit_receiver():
             key: value[0] if len(value) == 1 else value
             for key, value in request.form.items()
         }
-        payload = {k: v for k, v in payload.items() if v != ''}
+        for key, value in payload.items():
+            if value == "":
+                payload[key] = None
         if session['role'] == "administrador":
             payload.pop('id_receiver')
             r = requests.put('http://localhost:5002/editReceiver/' + request.args['id'],
