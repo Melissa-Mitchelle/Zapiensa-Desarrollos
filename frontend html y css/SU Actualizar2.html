@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html lang="en" dir="ltr">
   <head>
-    <title>SU Actualizar</title>
+    <title>SU Alta Validador</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -17,18 +17,31 @@
         <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: Helvetica Neue; font-size: 1.5rem; color: #777; text-decoration: underline;" <h2> Programa Beneficiarios <br> Asistencias </<h2>
           </<p>
       </div>
-      <div class="row col-md-12" style="margin-top: 30px; margin-bottom: 40px;">
-        <div class="container col-md-4  text-right">
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Inicio</button>
-        </div>
-        <div class=" container col-md-8 text-right">
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Seguimientos</button>
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Actualizaciones</button>
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Alta Usuario</button>
-          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Data Admin</button>
-        </div>
-      </div>
     </div>
+    <nav class="navbar navbar-expand-sm navbar-light bg-light"style="margin-top: 30px; margin-bottom:30px;">
+            <div class="container">
+              <dt href="#" class="navbar navbar-brand" style=" color: rgb(30,99,109);">Inicio</dt>
+              <button class="navbar-toggler" data-toggle="collapse" data-target="#NavBar">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+              <div class="collapse navbar-collapse" id="NavBar">
+                  <ul class="navbar-nav">
+                      <li class="nav-item">
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Seguimientos</dt>
+                      </li>
+                      <li class="nav-item">
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Actualizaciones</dt>
+                      </li>
+                      <li class="nav-item">
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Alta Usuario</dt>
+                      </li>
+                      <li class="nav-item">
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Data Admin</dt>
+                      </li>
+                  </ul>
+              </div>
+            </div>
+        </nav>
     <!--Termina codigo Header-->
     <!--Formulario-->
     <div class="container mh-60" alt="Max-height: 60%">
@@ -60,7 +73,6 @@
               <li><a href="#" data-toggle="modal" data-target="#modal1">Agregar Evento</a></li>
             </ul>
           </div>
-        </div>
           <!--Formulario de otro evento -->
           <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1-label">
             <div class="modal-dialog" role="document">
@@ -86,6 +98,7 @@
             </div>
           </div>
           <!--Termina codigo Formulario de otro evento -->
+        </div>
         <div class="container col-md-6">
           <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
             <input type="text" class="form-control" placeholder="BUSQUEDA">
@@ -203,19 +216,20 @@
     <!--Termina codigo Formulario-->
     <!--Footer -->
     <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
-  <div class="container-fluid text-center text-md-left">
-    <div class="row ">
-      <div class="text-center col-md-5">
-      <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a" src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
-    </div>
-    <div class="container col-md-2 mb-md-0 mb-3"></div>
-      <div class="container col-md-5 mb-md-0 mb-3 text-left">
-          <h5 class="text-muted"style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
-          <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
-          <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
-            <br> webmaster@zapopan.gob.mx </p>
+      <div class="container-fluid text-center text-md-left">
+        <div class="row">
+          <div class="text-center col-md-5">
+            <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a"
+              src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
+          </div>
+          <div class="container col-md-2 mb-md-0 mb-3"></div>
+          <div class="container col-md-5 mb-md-0 mb-3 text-left">
+            <h5 class="text-muted" style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
+            <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
+            <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
+              <br> webmaster@zapopan.gob.mx </p>
+          </div>
         </div>
-      </div>
       </div>
       <p class="text-Center col-sm-11" style="font-size: 1rem; color: #777;margin-top: 5px; margin-bottom: 10px;">© 2014-2020. Zapiensa-Desarrollos</p>
     </footer>
