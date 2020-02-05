@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+  <head>
+    <title>Administracion de Datos</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  </head>
+
+  <body class style="background-color: rgb(234,234,234)">
+    <!--Header-->
+    <div class="container mh-20" alt="Max-height: 20%">
+      <div class="row">
+        <img class="img-fluid col-md-7" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png" height="119.36" width="508">
+        <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: Helvetica Neue; font-size: 1.5rem; color: #777; text-decoration: underline;" <h2> Programa Beneficiarios <br> Asistencias </<h2>
+          </<p>
+      </div>
+      <div class="row col-md-12" style="margin-top: 30px; margin-bottom: 40px;">
+        <div class="container col-md-4  text-right">
+          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Inicio</button>
+        </div>
+        <div class=" container col-md-8 text-right">
+          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Seguimientos</button>
+          <button type="button" class="btn btn-secondary btn-sm" href="#"
+            style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Actualizaciones</button>
+          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Alta
+            Validador</button>
+          <button type="button" class="btn btn-secondary btn-sm" href="#" style="margin-top: 5px; margin-bottom: 5px; margin-right: 5px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Data Admin</button>
+        </div>
+      </div>
+    </div>
+    <!--Termina codigo Header-->
+
+    <div class="container mh-60" alt="Max-height: 60%">
+      <div class="row col-md-12">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;margin-bottom:30px;">Importar Documentos</h3>
+      </div>
+      <br>
+      <div class="row col-md-12">
+        <form action="" method="POST" enctype="multipart/form-data" target="_blank">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Importar</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input importar_archivo" id="customFile" name="fileimported" aria-describedby="inputGroupFileAddon01" lang="es">
+                <label class="custom-file-label importar_etiqueta" for="customFile" data-browse="Examinar">Seleccionar Archivo</label>
+              </div>
+              <script>
+                // Add the following code if you want the name of the file appear on select
+                $(".importar_archivo").on("change", function() {
+                  var fileName = $(this).val().split("\\").pop();
+                  $(this).siblings(".importar_etiqueta").addClass("selected").html(fileName);
+                });
+
+              </script>
+              </div>
+          </div>
+          <br>
+               <div class="dropdown">
+                 <!-- COMIENZA MODIFICACION HECHA POR FERNANDO/MAURO-->
+                    <label for="selection_file">Tipo de Archivo</label>
+                  <select name="tipo" class="form-control" id="selection_file">
+                        <option value="">Tipo de Archivo a importar</option>
+                        {% for n in una_lista %}
+                        <option>{{n}}</option>
+                        {% endfor %}
+                    <!-- TERMINA MODIFICACIÓN-->
+                  </select>
+               </div>
+          <br>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right btn-sm" onclick="submit">Importar</button>
+            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <div class="row col-md-12" style="margin-top: 30px;">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;">Exportar Documentos</h3>
+      </div>
+      <div class="row col-md-12">
+        <div class="container col-md-3" style="margin-top: 30px; margin-bottom: 30px; ">
+        </div>
+        <div class="container col-md-9"> </div>
+      </div>
+      <div class="row col-md-12">
+        <form method="POST" action="#" enctype="multipart/form-data">
+          <div class="form-group">
+            <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
+            <label for="dir_target">Capturar Manualmente Directorio de Destino</label>
+            <br>
+            <div class="input-group mb-3">
+              <input type="text" id="dir_target" name="dir_target">
+            <!--TERMINA MODIFICACIÓN-->
+            </div>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right btn-sm" onclick="submit">Exportar</button>
+            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <div class="row col-md-12" style="margin-top: 30px; margin-bottom: 30px;">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;">Respaldar Datos</h3>
+      </div>
+      <div class="row col-md-12">
+        <form method="POST" action="#" enctype="multipart/form-data">
+          <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right btn-sm" name="dir_targetb" onclick="submit">Generar Archivo de Respaldo</button>
+            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <div class="row col-md-12">
+
+        <br>
+          <a download="{{ backup_file }}" href="static/{{ backup_file }}">
+            <button class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo</button>
+          </a>
+                </div>
+      <br>
+        <!--TERMINA MODIFICACIÓN-->
+    </div>
+
+
+    <!--Footer -->
+    <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
+      <div class="container-fluid text-center text-md-left">
+        <div class="row">
+          <div class="text-center col-md-5">
+            <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a"
+              src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
+          </div>
+          <div class="container col-md-2 mb-md-0 mb-3"></div>
+          <div class="container col-md-5 mb-md-0 mb-3 text-left">
+            <h5 class="text-muted" style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
+            <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
+            <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
+              <br> webmaster@zapopan.gob.mx </p>
+          </div>
+        </div>
+      </div>
+      <p class="text-Center col-sm-11" style="font-size: 1rem; color: #777;margin-top: 5px; margin-bottom: 10px;">© 2014-2020. Zapiensa-Desarrollos</p>
+    </footer>
+
+  </body>
+
+  </html>
