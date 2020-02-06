@@ -16,6 +16,7 @@ fields_translation = {'first_name': "Nombre",
                       'zip_code': "Codigo Postal",
                       'address': "Dirección",
                       'p_phone': "Telefono 1",
+                      'roles': "Roles",
                       }
 
 
@@ -76,10 +77,12 @@ def create_user():
             key: value[0] if len(value) == 1 else value
             for key, value in request.form.items()
         }
+        if 'roles' in payload:
+            payload['roles'] = int(payload['roles'])
         for key, value in payload.items():
             if value == "":
                 payload[key] = None
-
+        print(payload)
         r = requests.post('http://localhost:5002/createUser',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
