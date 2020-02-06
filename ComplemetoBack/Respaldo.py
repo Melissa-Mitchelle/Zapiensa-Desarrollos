@@ -11,7 +11,7 @@ def respaldo():
     if request.method == 'POST' and 'dir_targetb' in request.values:
         print(backup_file)
         firststring = 'zapiensa_project_v2'
-        file2_ = '.\\static\\'
+        file2_ = 'static'
         finalstring = firststring + ' ' + file2_
         backup_file = os.path.join(file2_, os.path.basename(firststring) +
                                    time.strftime("-%Y%m%d-%H%M%S") + '.db')
