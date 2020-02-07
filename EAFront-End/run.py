@@ -231,6 +231,7 @@ def modificacion():
         else:
             return "Error", r.status_code
 
+
 @app.route("/editarBeneficiario", methods=['GET', 'POST'])
 @verify_session
 def edit_receiver():
@@ -268,7 +269,7 @@ def edit_receiver():
 @verify_session
 def data_admin():
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
-                                                               'Tipo Jalisco te Reconoce', 'Otro Tipo'],
+                                                                       'Tipo Jalisco te Reconoce', 'Otro Tipo'],
                            fecha=time.strftime("%Y%m%d-%H%M%S"))
 
 
@@ -281,35 +282,39 @@ def importar():
     data_file = {"fileimported": (bin_file.filename, bin_file.read(), bin_file.content_type)}
     print(data_file)
     r = requests.post('http://localhost:5002/importation', data={'tipo': request.form['tipo']}, files=data_file,
-                     verify=False)
-    if r. ok:
+                      verify=False, headers={'Authentication-Token': session['api_session_token']})
+    if r.ok:
         flash('Listo.')
     else:
         flash(r.content)
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
-                                                               'Tipo Jalisco te Reconoce', 'Otro Tipo'],
+                                                                       'Tipo Jalisco te Reconoce', 'Otro Tipo'],
                            fecha=time.strftime("%Y%m%d-%H%M%S"))
 
 
 @app.route("/exportar", methods=['GET'])
 @verify_session
 def exportar():
-    r = requests.get('http://localhost:5002/exports?filename=' + request.args['fecha'], stream=True)
+    r = requests.get('http://localhost:5002/exports?filename=' + request.args['fecha'], stream=True,
+                     headers={'Authentication-Token': session['api_session_token']})
 
     headers = Headers()
     headers.add_header('Content-Type', r.headers["content-type"])
-    headers.add_header('Content-Disposition', 'attachment; filename="' + 'exportacion-' + time.strftime("%Y%m%d-%H%M%S") + '.xls"')
+    headers.add_header('Content-Disposition',
+                       'attachment; filename="' + 'exportacion-' + time.strftime("%Y%m%d-%H%M%S") + '.xls"')
     return Response(stream_with_context(r.iter_content(chunk_size=2048)), headers=headers)
 
 
 @app.route("/respaldo", methods=['GET'])
 @verify_session
 def respaldo():
-    r = requests.get('http://localhost:5002/backup', stream=True)
+    r = requests.get('http://localhost:5002/backup', stream=True,
+                     headers={'Authentication-Token': session['api_session_token']})
 
     headers = Headers()
     headers.add_header('Content-Type', r.headers["content-type"])
-    headers.add_header('Content-Disposition', 'attachment; filename="' + 'respaldo-' + time.strftime("%Y%m%d-%H%M%S") + '.db"')
+    headers.add_header('Content-Disposition',
+                       'attachment; filename="' + 'respaldo-' + time.strftime("%Y%m%d-%H%M%S") + '.db"')
     return Response(stream_with_context(r.iter_content(chunk_size=2048)), headers=headers)
 
 

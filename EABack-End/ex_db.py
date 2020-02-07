@@ -1,20 +1,22 @@
 import os, time
 from os import remove
+
+from flask_security import roles_required
 from xls2db import xls2db
 import sqlite3
 from flask import Flask, request, render_template, flash, send_from_directory, send_file
 from Export import export
 from Respaldo import respaldo
 from config import app
-#app = Flask(__name__)
-#app.secret_key = '12345'
 
 
+# app = Flask(__name__)
+# app.secret_key = '12345'
+
+@roles_required('ADMINISTRADOR')
 @app.route("/importation", methods=['GET', 'POST'])
 def importation():
     backup_file = None
-    print(request.files['fileimported'].filename)
-    print(request.form)
     if request.method == 'POST' and 'fileimported' in request.files and request.files['fileimported'].filename != '' \
             and str(request.form['tipo']) != '':
 
@@ -25,7 +27,6 @@ def importation():
         filsource = os.path.join(os.path.dirname(__file__), 'uploads', file_.filename)
         filtype = tipo_
         equery3 = equery4 = equery5 = equery6 = equery7 = """"""
-        print(tipo_)
         if filtype == 'Tipo ZAP Academy':
             condb = 'Ben_1.db'
             equery = """SELECT "NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO", "CURP", "CELULAR", "TELÉFONO CASA", 
@@ -71,13 +72,11 @@ def importation():
             equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone",
                                  "email", "created_user")
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, ?, 1)"""
-            print(tipo_)
 
         def import_function():
             biter = "sqlitebiter -o " + condb + " file "
             excel = filsource
             cadena = biter + excel
-            print(cadena)
             os.system(cadena)
 
         def import_funtion_2():
@@ -123,7 +122,6 @@ def importation():
         con.close()
         con2.close()
         remove(condb)
-        print('Successful Transaction!')
         # return jsonify('Successful Transaction!')
         # flash("Transacción Exitosa!")
         os.remove(os.path.join(os.path.dirname(__file__), 'uploads', file_.filename))
@@ -146,19 +144,20 @@ def importation():
                            backup_file=backup_file, now=time.strftime("%Y%m%d-%H%M%S"))"""
 
 
+@roles_required('ADMINISTRADOR')
 @app.route("/exports", methods=['GET', 'POST'])
 def exports():
-
     exportfile = export(request.args['filename'])
-    print(exportfile)
     return send_file(exportfile, as_attachment=True)
 
 
+@roles_required('ADMINISTRADOR')
 @app.route("/backup", methods=['GET', 'POST'])
 def backup():
-#    file = respaldo()
-    return send_file('zapiensa_project_v2.db', attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db', as_attachment=True)
-
+    #    file = respaldo()
+    return send_file('zapiensa_project_v2.db',
+                     attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db',
+                     as_attachment=True)
 
 
 if __name__ == '__main__':
