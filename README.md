@@ -12,4 +12,5 @@ Repositorio Creado para el desarrollo de la ZAP App Equipo # 9 Zapiensa-Desarrol
 `flask-restful
 flask-sqlalchemy
 marshmallow
-flask-security`
+flask-security
+bcrypt`

@@ -155,5 +155,11 @@ def backup():
     return send_file('zapiensa_project_v2.db', attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db', as_attachment=True)
 
 
+@app.route("/backup", methods=['GET', 'POST'])
+def backup():
+    file = respaldo()
+    return send_file('zapiensa_project_v2.db', attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db', as_attachment=True)
+
+
 if __name__ == '__main__':
     app.run(debug=True, port='5003')

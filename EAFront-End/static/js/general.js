@@ -25,6 +25,10 @@ $(document).ready(function () {
             });
         }
     });
+    $('#uroles a').click( function(event){
+            $(this).parent().parent().prev().html($(this).html() + '<span class="caret"></span>');
+            $('#roles').val($(this).data('id-role'));
+    });
     table = $('#data').DataTable({
         orderCellsTop: true,
         fixedHeader: true,

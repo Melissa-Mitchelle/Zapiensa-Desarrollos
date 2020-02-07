@@ -1,19 +1,13 @@
-import datetime
-import os
-from pathlib import Path
-
 import sqlalchemy
-from flask import request, render_template, make_response, jsonify
+from flask import request, render_template, make_response
 from flask_restful import Resource
 from flask_security import Security, login_required, SQLAlchemyUserDatastore, roles_required
 from flask_login import current_user
 from flask_security.utils import hash_password
 from config import app, db
-from marshmallow import ValidationError
-from models import UserModel, UserSchema, ReceiverModel, \
+from models import UserModel, UserSchema, ReceiverModel, roles_users, \
     ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
-from sqlalchemy.orm import aliased
 
 
 def clone_model(model):
@@ -173,6 +167,8 @@ class CreateUser(Resource):
     def post(self):
         req_data = request.get_json()
         req_data['created_user'] = current_user.id
+        role = req_data['roles']
+        req_data.pop('roles')
         errors = user_schema.validate(req_data)
         if errors:
             return errors, 500
@@ -183,6 +179,10 @@ class CreateUser(Resource):
             user = UserModel(data)
             user.password = hash_password(user.password)
             user.create()
+            ins = roles_users.insert().values(id_user=user.id_user, id_role=role)
+            ins.compile().params
+            result = db.session.execute(ins)
+            db.session.commit()
             return {
                 'message': 'Usuario {} creado'.format(data['username'])
             }
