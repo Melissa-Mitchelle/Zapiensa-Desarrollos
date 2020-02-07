@@ -1,8 +1,8 @@
-import os
+import os, time
 from os import remove
 from xls2db import xls2db
 import sqlite3
-from flask import Flask, request, app, render_template, flash
+from flask import Flask, request, app, render_template, flash, send_from_directory, send_file
 from Export import export
 from Respaldo import respaldo
 
@@ -138,16 +138,21 @@ def importation():
 
     return render_template('SU Exportaciones.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                'Tipo Jalisco te Reconoce', 'Otro Tipo'],
-                           backup_file=backup_file)
+                           backup_file=backup_file, now=time.strftime("%Y%m%d-%H%M%S"))
 
 
 @app.route("/exports", methods=['GET', 'POST'])
 def exports():
-    export()
-    return render_template('SU Exportaciones.html', my_list=('Tipo ZAP Academy',
-                                                             'Tipo Apoyo a Mujeres',
-                                                             'Tipo Jalisco te Reconoce',
-                                                             'Otro Tipo'))
+
+    exportfile = export(request.args['filename'])
+    print(exportfile)
+    return send_file(exportfile, as_attachment=True)
+
+
+@app.route("/backup", methods=['GET', 'POST'])
+def backup():
+    file = respaldo()
+    return send_file('zapiensa_project_v2.db', attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db', as_attachment=True)
 
 
 if __name__ == '__main__':

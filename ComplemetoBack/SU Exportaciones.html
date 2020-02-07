@@ -93,16 +93,9 @@
         <form method="POST" action="#" enctype="multipart/form-data">
           <div class="form-group">
             <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
-            <label for="dir_target">Capturar Manualmente Directorio de Destino</label>
-            <br>
-            <div class="input-group mb-3">
-              <input type="text" id="dir_target" name="dir_target">
+            <a href="exports?filename=Export-{{ now }}" class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo de Exportación</a>
             <!--TERMINA MODIFICACIÓN-->
-            </div>
-          </div>
-          <div class="form-group">
-            <button type="submit" class="btn btn-primary pull-right btn-sm" onclick="submit">Exportar</button>
-            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+
           </div>
         </form>
       </div>
@@ -114,19 +107,10 @@
           <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
 
           <div class="form-group">
-            <button type="submit" class="btn btn-primary pull-right btn-sm" name="dir_targetb" onclick="submit">Generar Archivo de Respaldo</button>
-            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+            <a href="backup" class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo</a>
           </div>
         </form>
       </div>
-      <div class="row col-md-12">
-
-        <br>
-          <a download="{{ backup_file }}" href="static/{{ backup_file }}">
-            <button class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo</button>
-          </a>
-                </div>
-      <br>
         <!--TERMINA MODIFICACIÓN-->
     </div>
 
