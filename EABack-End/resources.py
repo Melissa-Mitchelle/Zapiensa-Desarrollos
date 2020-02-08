@@ -8,7 +8,7 @@ from config import app, db
 from models import UserModel, UserSchema, ReceiverModel, roles_users, \
     ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
-
+import ex_db
 
 def clone_model(model):
     data = model

@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block title %}
+Data Admin
+{% endblock %}
+{% block content %}
+    <div class="container mh-60" alt="Max-height: 60%">
+      <div class="row col-md-12">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;margin-bottom:30px;">Importar Documentos</h3>
+      </div>
+      <br>
+      <div class="row col-md-12">
+        <form action="importar" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroupFileAddon01">Importar</span>
+              </div>
+              <div class="custom-file">
+                <input type="file" class="custom-file-input importar_archivo" id="customFile" name="fileimported" aria-describedby="inputGroupFileAddon01" lang="es">
+                <label class="custom-file-label importar_etiqueta" for="customFile" data-browse="Examinar">Seleccionar Archivo</label>
+              </div>
+              <script>
+                // Add the following code if you want the name of the file appear on select
+                $(".importar_archivo").on("change", function() {
+                  var fileName = $(this).val().split("\\").pop();
+                  $(this).siblings(".importar_etiqueta").addClass("selected").html(fileName);
+                });
+
+              </script>
+              </div>
+          </div>
+          <br>
+               <div class="dropdown">
+                 <!-- COMIENZA MODIFICACION HECHA POR FERNANDO/MAURO-->
+                    <label for="selection_file">Tipo de Archivo</label>
+                  <select name="tipo" class="form-control" id="selection_file">
+                        <option value="">Tipo de Archivo a importar</option>
+                        {% for n in una_lista %}
+                        <option>{{n}}</option>
+                        {% endfor %}
+                    <!-- TERMINA MODIFICACIÓN-->
+                  </select>
+               </div>
+          <br>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary pull-right btn-sm" onclick="submit">Importar</button>
+            <button type="reset" class="btn btn-danger btn-sm">Cancelar</button>
+          </div>
+        </form>
+      </div>
+      <div class="row col-md-12" style="margin-top: 30px;">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;">Exportar Documentos</h3>
+      </div>
+      <div class="row col-md-12">
+        <div class="container col-md-3" style="margin-top: 30px; margin-bottom: 30px; ">
+        </div>
+        <div class="container col-md-9"> </div>
+      </div>
+      <div class="row col-md-12">
+        <form method="POST" action="#" enctype="multipart/form-data">
+          <div class="form-group">
+            <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
+            <a href="exportar?fecha=-{{ fecha }}" class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo de Exportación</a>
+            <!--TERMINA MODIFICACIÓN-->
+
+          </div>
+        </form>
+      </div>
+      <div class="row col-md-12" style="margin-top: 30px; margin-bottom: 30px;">
+        <h3 style="font-family: Helvetica Neue; font-size: 2rem;">Respaldar Datos</h3>
+      </div>
+      <div class="row col-md-12">
+        <form method="POST" action="#" enctype="multipart/form-data">
+          <!--COMIENZA MODIFICACIÓN HECHA POR FERNANDO-->
+
+          <div class="form-group">
+            <a href="respaldo" class="btn btn-primary pull-right btn-sm"><i class="fa fa-download"></i>Descargar Archivo</a>
+          </div>
+        </form>
+      </div>
+        <!--TERMINA MODIFICACIÓN-->
+    </div>
+
+{% endblock %}

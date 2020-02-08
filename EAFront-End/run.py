@@ -1,7 +1,12 @@
+import time
+
 import requests
 from flask import Flask, \
-    render_template, send_from_directory, request, url_for, redirect, make_response, session, jsonify, flash
+    render_template, send_from_directory, request, url_for, redirect, make_response, session, jsonify, flash, send_file, \
+    stream_with_context, Response
 from datetime import timedelta
+
+from werkzeug.datastructures import ImmutableMultiDict, Headers
 
 app = Flask(__name__)
 app.secret_key = 'ZAP/IENSA'
@@ -226,6 +231,7 @@ def modificacion():
         else:
             return "Error", r.status_code
 
+
 @app.route("/editarBeneficiario", methods=['GET', 'POST'])
 @verify_session
 def edit_receiver():
@@ -257,6 +263,59 @@ def edit_receiver():
                               )
         flash(r.json()['message'])
         return render_template('search.html')
+
+
+@app.route("/dataAdmin", methods=['GET', 'POST'])
+@verify_session
+def data_admin():
+    return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
+                                                                       'Tipo Jalisco te Reconoce', 'Otro Tipo'],
+                           fecha=time.strftime("%Y%m%d-%H%M%S"))
+
+
+@app.route("/importar", methods=['POST'])
+@verify_session
+def importar():
+    data = request.files
+    bin_file = data.get('fileimported')
+    print(bin_file)
+    data_file = {"fileimported": (bin_file.filename, bin_file.read(), bin_file.content_type)}
+    print(data_file)
+    r = requests.post('http://localhost:5002/importation', data={'tipo': request.form['tipo']}, files=data_file,
+                      verify=False, headers={'Authentication-Token': session['api_session_token']})
+    if r.ok:
+        flash('Listo.')
+    else:
+        flash(r.content)
+    return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
+                                                                       'Tipo Jalisco te Reconoce', 'Otro Tipo'],
+                           fecha=time.strftime("%Y%m%d-%H%M%S"))
+
+
+@app.route("/exportar", methods=['GET'])
+@verify_session
+def exportar():
+    r = requests.get('http://localhost:5002/exports?filename=' + request.args['fecha'], stream=True,
+                     headers={'Authentication-Token': session['api_session_token']})
+
+    headers = Headers()
+    headers.add_header('Content-Type', r.headers["content-type"])
+    headers.add_header('Content-Disposition',
+                       'attachment; filename="' + 'exportacion-' + time.strftime("%Y%m%d-%H%M%S") + '.xls"')
+    return Response(stream_with_context(r.iter_content(chunk_size=2048)), headers=headers)
+
+
+@app.route("/respaldo", methods=['GET'])
+@verify_session
+def respaldo():
+    r = requests.get('http://localhost:5002/backup', stream=True,
+                     headers={'Authentication-Token': session['api_session_token']})
+
+    headers = Headers()
+    headers.add_header('Content-Type', r.headers["content-type"])
+    headers.add_header('Content-Disposition',
+                       'attachment; filename="' + 'respaldo-' + time.strftime("%Y%m%d-%H%M%S") + '.db"')
+    return Response(stream_with_context(r.iter_content(chunk_size=2048)), headers=headers)
 
 
 @app.route('/css/<path:path>')
