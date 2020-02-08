@@ -29,7 +29,7 @@ def importation():
             equery = """SELECT "NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO", "CURP", "CELULAR", "TELÉFONO CASA", 
                                     "CORREO"
                                     FROM data"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                         "email", "created_user") 
                                         VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, ?, 1)"""
         elif filtype == 'Tipo Apoyo a Mujeres':
@@ -37,7 +37,7 @@ def importation():
             equery = """SELECT "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "CURP", "CELULAR", "TELÉFONO CASA", 
                             ("CALLE"||" "||"NUMERO EXT") AS "DOMICILIO", "CÓDIGO"
                             FROM Beneficiarios """
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                 "address", "zip_code", "created_user") 
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, UPPER(?), ?, 1)"""
             equery3 = """UPDATE Beneficiarios SET `NUMERO EXT` = SUBSTR( `NUMERO EXT`, -2, -15)
@@ -51,7 +51,7 @@ def importation():
             equery = """SELECT "Nombre", "Primer Apellido", "Segundo Apellido", "CURP", "Celular", "Teléfono", 
                             ("Calle"||" "||"Numero Exterior"||" "||"Colonia") AS "Domicilio", "Código Postal", "Email"
                             FROM Hoja1 WHERE "Primer Apellido" <> ''"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                 "address", "zip_code", "email", "created_user") 
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, UPPER(?), ?, ?, 1)"""
             equery3 = """DELETE FROM Hoja1 WHERE `Primer Apellido` = ''"""
@@ -66,7 +66,7 @@ def importation():
             condb = 'Ben_4.db'
             equery = """SELECT "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "CURP", "CELULAR", "TELEFONO",
                                     "CORREO ELECTRONICO" FROM data1"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone",
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone",
                                  "email", "created_user")
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, ?, 1)"""
             print(tipo_)
@@ -147,12 +147,6 @@ def exports():
     exportfile = export(request.args['filename'])
     print(exportfile)
     return send_file(exportfile, as_attachment=True)
-
-
-@app.route("/backup", methods=['GET', 'POST'])
-def backup():
-    file = respaldo()
-    return send_file('zapiensa_project_v2.db', attachment_filename='zapiensa_project_v2' + time.strftime("-%Y%m%d-%H%M%S") + '.db', as_attachment=True)
 
 
 @app.route("/backup", methods=['GET', 'POST'])
