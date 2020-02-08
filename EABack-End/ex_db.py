@@ -99,9 +99,6 @@ def importation():
         cur = con.cursor()
         cur2 = con2.cursor()
 
-        # cur.execute("""UPDATE data SET CELULAR = SUBSTR( CELULAR, -2, -15) WHERE CELULAR LIKE '%.0'""")
-        # cur.execute(
-        #     """UPDATE data SET `TELÉFONO CASA` = SUBSTR( `TELÉFONO CASA`, -2, -15) WHERE `TELÉFONO CASA` LIKE '%.0'""")
         if filtype == 'Tipo Apoyo a Mujeres':
             cur.execute(equery3)
             cur.execute(equery4)
