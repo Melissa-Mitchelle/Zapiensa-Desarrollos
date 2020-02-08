@@ -27,6 +27,7 @@ def importation():
         filsource = os.path.join(os.path.dirname(__file__), 'uploads', file_.filename)
         filtype = tipo_
         equery3 = equery4 = equery5 = equery6 = equery7 = """"""
+        equery8 = """UPDATE OR IGNORE 'RECEIVERS' SET birthdate= SUBSTR(curp, 5,6), gender= SUBSTR(curp, 11,1)"""
         if filtype == 'Tipo ZAP Academy':
             condb = 'Ben_1.db'
             equery = """SELECT "NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO", "CURP", "CELULAR", "TELÉFONO CASA", 
@@ -115,6 +116,7 @@ def importation():
         monton = cur.fetchall()
 
         cur2.executemany(equery2, monton)
+        cur2.execute(equery8)
         con2.commit()
         con.close()
         con2.close()

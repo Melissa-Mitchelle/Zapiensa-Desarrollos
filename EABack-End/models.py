@@ -20,8 +20,7 @@ class UserModel(db.Model, UserMixin):
     __tablename__ = 'USERS'
 
     id_user = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(45), nullable=False)
-    s_name = db.Column(db.String(45), nullable=True)
+    given_name = db.Column(db.String(90), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
     s_last_name = db.Column(db.String(45), nullable=True)
     username = db.Column(db.String(45), unique=True, nullable=False)
@@ -36,7 +35,7 @@ class UserModel(db.Model, UserMixin):
                             backref=db.backref('USERS', lazy='dynamic'))
 
     def __init__(self, data):
-        self.first_name = data.get('first_name')
+        self.given_name = data.get('given_name')
         self.s_name = data.get('s_name')
         self.last_name = data.get('last_name')
         self.s_last_name = data.get('s_last_name')
@@ -105,8 +104,7 @@ class RoleSchema(Schema):
 
 class UserSchema(Schema):
     id_user = fields.Int(dump_only=True)
-    first_name = fields.Str(required=True)
-    s_name = fields.Str(required=False)
+    given_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
     s_last_name = fields.Str(required=False)
     username = fields.Str(required=True)
@@ -136,12 +134,12 @@ class ReceiverModel(db.Model):
     __tablename__ = 'RECEIVERS'
 
     id_receiver = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(45), nullable=False)
-    s_name = db.Column(db.String(45), nullable=True)
+    given_name = db.Column(db.String(90), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
     s_last_name = db.Column(db.String(45), nullable=True)
-    age = db.Column(db.Integer, nullable=False)
     curp = db.Column(db.String(18), unique=True, nullable=False)
+    birthdate = db.Column(db.Date, nullable=True)
+    gender = db.Column(db.String(1), nullable=True)
     p_phone = db.Column(db.String(18), nullable=False)
     s_phone = db.Column(db.String(18), nullable=True)
     address = db.Column(db.String(256), nullable=True)
@@ -154,12 +152,12 @@ class ReceiverModel(db.Model):
     events = association_proxy('receivers_events', 'event')
 
     def __init__(self, data):
-        self.first_name = data.get('first_name')
-        self.s_name = data.get('s_name')
+        self.given_name = data.get('given_name')
         self.last_name = data.get('last_name')
         self.s_last_name = data.get('s_last_name')
-        self.age = data.get('age')
         self.curp = data.get('curp')
+        self.birthdate = data.get('birthdate')
+        self.gender = data.get('gender')
         self.p_phone = data.get('p_phone')
         self.s_phone = data.get('s_phone')
         self.address = data.get('address')
@@ -206,7 +204,7 @@ class ReceiverModel(db.Model):
         elif method == "name":
             print(search_data)
             return ReceiverModel.query.filter(
-                (ReceiverModel.first_name + ' ' + ReceiverModel.last_name
+                (ReceiverModel.given_name + ' ' + ReceiverModel.last_name
                  + ' ' + ReceiverModel.s_last_name
                  ).contains(search_data)
             ).all()
@@ -221,7 +219,7 @@ class ReceiverModel(db.Model):
                                                   ReceiverModel.zip_code.contains(search_data),
                                                   ReceiverModel.email.contains(search_data),
                                                   (
-                                                          ReceiverModel.first_name + ' ' + ReceiverModel.last_name
+                                                          ReceiverModel.given_name + ' ' + ReceiverModel.last_name
                                                           + ' ' + ReceiverModel.s_last_name
                                                   ).contains(search_data)
                                                   )).all()
@@ -298,12 +296,12 @@ class ReceiverEventsSchema(ModelSchema):
 
 class ReceiverSchema(Schema):
     id_receiver = fields.Int(dump_only=True)
-    first_name = fields.Str(required=True)
-    s_name = fields.Str(required=False)
+    given_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
     s_last_name = fields.Str(required=False)
-    age = fields.Int(required=False, allow_none=True)
     curp = fields.Str(required=True)
+    birthdate = fields.Date(required=False, allow_none=True)
+    gender = fields.Str(required=False)
     p_phone = fields.Int(required=True)
     s_phone = fields.Int(required=False, allow_none=True)
     address = fields.Str(required=False)
@@ -321,11 +319,12 @@ class ReceiverMirrorModel(db.Model):
 
     id_receiver_mirror = db.Column(db.Integer, primary_key=True)
     id_receiver = db.Column(db.Integer, db.ForeignKey("RECEIVERS.id_receiver"), nullable=False)
-    first_name = db.Column(db.String(45), nullable=False)
+    given_name = db.Column(db.String(45), nullable=False)
     last_name = db.Column(db.String(45), nullable=False)
     s_last_name = db.Column(db.String(45), nullable=False)
-    age = db.Column(db.Integer, nullable=False)
-    curp = db.Column(db.String(18), nullable=False)
+    # curp = db.Column(db.String(18), nullable=False)
+    birthdate = db.Column(db.Date, nullable=False)
+    gender = db.Column(db.String(1), nullable=False)
     p_phone = db.Column(db.String(18), nullable=False)
     s_phone = db.Column(db.String(18), nullable=True)
     address = db.Column(db.String(250), nullable=False)
@@ -336,11 +335,12 @@ class ReceiverMirrorModel(db.Model):
 
     def __init__(self, data):
         self.id_receiver = data.get('id_receiver')
-        self.first_name = data.get('first_name')
+        self.given_name = data.get('given_name')
         self.last_name = data.get('last_name')
         self.s_last_name = data.get('s_last_name')
-        self.age = data.get('age')
-        self.curp = data.get('curp')
+        # self.curp = data.get('curp')
+        self.birthdate = data.get('birthdate')
+        self.gender = data.get('gender')
         self.p_phone = data.get('p_phone')
         self.s_phone = data.get('s_phone')
         self.address = data.get('address')
@@ -374,11 +374,12 @@ class ReceiverMirrorModel(db.Model):
 class ReceiverMirrorSchema(Schema):
     id_receiver_mirror = fields.Int(dump_only=True)
     id_receiver = fields.Int(required=True)
-    first_name = fields.Str(required=True)
+    given_name = fields.Str(required=True)
     last_name = fields.Str(required=True)
     s_last_name = fields.Str(required=True)
-    age = fields.Int(required=False)
-    curp = fields.Str(required=True)
+    # curp = fields.Str(required=True)
+    birthdate = fields.Date(required=False)
+    gender = fields.Str(required=False)
     p_phone = fields.Int(required=True)
     s_phone = fields.Str(required=False, allow_none=True)
     address = fields.Str(required=False)

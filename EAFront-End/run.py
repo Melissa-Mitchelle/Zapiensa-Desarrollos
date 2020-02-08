@@ -11,7 +11,7 @@ from werkzeug.datastructures import ImmutableMultiDict, Headers
 app = Flask(__name__)
 app.secret_key = 'ZAP/IENSA'
 app.permanent_session_lifetime = timedelta(minutes=15)
-fields_translation = {'first_name': "Nombre",
+fields_translation = {'given_name': "Nombre",
                       'last_name': "Apellido Paterno",
                       's_last_name': "Apellido Materno",
                       'email': "Correo electronico",
