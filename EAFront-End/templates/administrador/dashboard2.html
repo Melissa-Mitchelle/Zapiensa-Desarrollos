@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+{% block title %}
+Dashboard
+{% endblock %}
+{% block maxSearchCols %}
+let lastSearchableCol = 2;
+let firstSearchableCol = 0;
+
+var options = {
+  series: [76, 67],
+  chart: {
+  height: 390,
+  type: 'radialBar',
+},
+plotOptions: {
+  radialBar: {
+    offsetY: 0,
+    startAngle: 0,
+    endAngle: 270,
+    hollow: {
+      margin: 5,
+      size: '30%',
+      background: 'transparent',
+      image: undefined,
+    },
+    dataLabels: {
+      name: {
+        show: false,
+      },
+      value: {
+        show: false,
+      }
+    }
+  }
+},
+colors: ['#1ab7ea', '#0084ff', '#39539E', '#0077B5'],
+labels: ['Confirmado', 'Asistencia'],
+legend: {
+  show: true,
+  floating: true,
+  fontSize: '16px',
+  position: 'left',
+  offsetX: 10,
+  offsetY: 20,
+  labels: {
+    useSeriesColors: true,
+  },
+  markers: {
+    size: 0
+  },
+  formatter: function(seriesName, opts) {
+    return seriesName + ":  " + opts.w.globals.series[opts.seriesIndex]
+  },
+  itemMargin: {
+    horizontal: 3,
+  }
+},
+responsive: [{
+  breakpoint: 480,
+  options: {
+    legend: {
+        show: false
+    }
+  }
+}]
+};
+{% endblock %}
+{% block content %}
+    <!--Formulario-->
+    <div class="container mh-60" alt="Max-height: 60%">
+      <section>
+        <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
+          <div class="row">
+            {%for event in events %}
+
+                <div class="column" style="min-width: 400px;">{{event}}
+                <div id="chart{{event}}" style="max-width: 400px; min-height: 437.7px;"></div>
+                  </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </section>
+</div>
+<script type="text/javascript">
+  {%for event in events %}
+
+    var chart = new ApexCharts(document.querySelector("#chart{{event}}"), options);
+        chart.render();
+  {% endfor %}
+</script>
+    <!--Termina codigo Formulario-->
+     {% endblock %}

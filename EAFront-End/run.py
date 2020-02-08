@@ -181,6 +181,26 @@ def dashboard_validador():
         return redirect(url_for('login'))
 
 
+@app.route("/dashboard2", methods=['GET'])
+@verify_session
+def dashboard2():
+    role = session['role']
+    try:
+        """if role == 'administrador':
+            r = requests.get('http://localhost:5002/receiversModifications',
+                             headers={'Authentication-Token': session['api_session_token']})
+            if r.ok:
+                return render_template(role + '/dashboard.html', receivers_modifications=r.json())
+            elif r.status_code == 403:
+                return redirect(url_for('login'))
+            else:
+                return r.content, 500
+        else:"""
+        return render_template(role + '/dashboard2.html', events=[1,2,3,4])
+    except ValueError:
+        return redirect(url_for('login'))
+
+
 @app.route("/buscar", methods=['GET', 'POST'])
 def search():
     if request.method == 'GET':

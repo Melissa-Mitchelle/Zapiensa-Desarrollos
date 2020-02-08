@@ -10,7 +10,7 @@ from xlsxwriter.workbook import Workbook
 
 def export(filename):
     xfile = None
-    file2_ = '.\\uploads\\'
+    file2_ = '.\uploads\\'
     namebook = 'port'
     print(file2_)
     dirtarget2 = file2_ + "Ex"
