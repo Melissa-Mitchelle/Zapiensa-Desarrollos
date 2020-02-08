@@ -27,12 +27,13 @@ def importation():
         filsource = os.path.join(os.path.dirname(__file__), 'uploads', file_.filename)
         filtype = tipo_
         equery3 = equery4 = equery5 = equery6 = equery7 = """"""
+        equery8 = """UPDATE OR IGNORE 'RECEIVERS' SET birthdate= SUBSTR(curp, 5,6), gender= SUBSTR(curp, 11,1)"""
         if filtype == 'Tipo ZAP Academy':
             condb = 'Ben_1.db'
             equery = """SELECT "NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO", "CURP", "CELULAR", "TELÉFONO CASA", 
                                     "CORREO"
                                     FROM data"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                         "email", "created_user") 
                                         VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, ?, 1)"""
         elif filtype == 'Tipo Apoyo a Mujeres':
@@ -40,7 +41,7 @@ def importation():
             equery = """SELECT "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "CURP", "CELULAR", "TELÉFONO CASA", 
                             ("CALLE"||" "||"NUMERO EXT") AS "DOMICILIO", "CÓDIGO"
                             FROM Beneficiarios """
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                 "address", "zip_code", "created_user") 
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, UPPER(?), ?, 1)"""
             equery3 = """UPDATE Beneficiarios SET `NUMERO EXT` = SUBSTR( `NUMERO EXT`, -2, -15)
@@ -54,7 +55,7 @@ def importation():
             equery = """SELECT "Nombre", "Primer Apellido", "Segundo Apellido", "CURP", "Celular", "Teléfono", 
                             ("Calle"||" "||"Numero Exterior"||" "||"Colonia") AS "Domicilio", "Código Postal", "Email"
                             FROM Hoja1 WHERE "Primer Apellido" <> ''"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone", 
                                 "address", "zip_code", "email", "created_user") 
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, UPPER(?), ?, ?, 1)"""
             equery3 = """DELETE FROM Hoja1 WHERE `Primer Apellido` = ''"""
@@ -69,7 +70,7 @@ def importation():
             condb = 'Ben_4.db'
             equery = """SELECT "NOMBRE", "APELLIDO PATERNO", "APELLIDO MATERNO", "CURP", "CELULAR", "TELEFONO",
                                     "CORREO ELECTRONICO" FROM data1"""
-            equery2 = """INSERT INTO RECEIVERS ("first_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone",
+            equery2 = """INSERT OR IGNORE INTO RECEIVERS ("given_name", "last_name", "s_last_name", "curp", "p_phone", "s_phone",
                                  "email", "created_user")
                                 VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, ?, 1)"""
 
@@ -99,9 +100,6 @@ def importation():
         cur = con.cursor()
         cur2 = con2.cursor()
 
-        # cur.execute("""UPDATE data SET CELULAR = SUBSTR( CELULAR, -2, -15) WHERE CELULAR LIKE '%.0'""")
-        # cur.execute(
-        #     """UPDATE data SET `TELÉFONO CASA` = SUBSTR( `TELÉFONO CASA`, -2, -15) WHERE `TELÉFONO CASA` LIKE '%.0'""")
         if filtype == 'Tipo Apoyo a Mujeres':
             cur.execute(equery3)
             cur.execute(equery4)
@@ -118,6 +116,7 @@ def importation():
         monton = cur.fetchall()
 
         cur2.executemany(equery2, monton)
+        cur2.execute(equery8)
         con2.commit()
         con.close()
         con2.close()

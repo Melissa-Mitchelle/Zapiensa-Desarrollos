@@ -1,4 +1,123 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../ComplemetoBack/.idea/ComplemetoBack.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/EABack-End.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/modules.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/rSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EABack-End/Ben_1.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EABack-End/ex_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/ex_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EABack-End/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/EAFront-End.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EAFront-End.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/administrador/create_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/create_user.html" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1WkotwEoH9nEqSDqnW5Y4NpYZck" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/run.py" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager">
+    <configuration name="Run Frontend" type="PythonConfigurationType" factoryName="Python">
+      <module name="EAFront-End" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:\Users\Fernando3Stac\Anaconda3\python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/run.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="viewStates">
+      <list>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="" />
+      <created>1581179378521</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1581179378521</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="137" y="20" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581179434971">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="137" y="20" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1581179434971" />
+    <state x="463" y="120" key="FileChooserDialogImpl" timestamp="1581179398534">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="463" y="120" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581179398534" />
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1581189107288">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581189107288" />
+    <state width="1345" height="179" key="GridCell.Tab.0.center" timestamp="1581189107286">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581189107286" />
+    <state width="1345" height="179" key="GridCell.Tab.0.left" timestamp="1581189107286">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581189107286" />
+    <state width="1345" height="179" key="GridCell.Tab.0.right" timestamp="1581189107287">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581189107287" />
+    <state x="184" y="7" key="SettingsEditor" timestamp="1581189659783">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="7" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1581189659783" />
+  </component>
 </project>
