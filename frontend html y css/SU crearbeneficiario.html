@@ -1,7 +1,7 @@
 <!DOCTYPE html>
   <html lang="en" dir="ltr">
   <head>
-    <title>SU Crear Beneficiario</title>
+    <title>SU Crear</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
@@ -9,230 +9,258 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   </head>
-  <body class style="background-color: rgb(234,234,234)">
-        <!--Header-->
-    <div class="container mh-20" alt="Max-height: 20%">
-      <div class="row">
-        <img class="img-fluid col-md-7" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png" height="119.36" width="508">
-        <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: Helvetica Neue; font-size: 1.5rem; color: #777; text-decoration: underline;" <h2> Programa Beneficiarios <br> Asistencias </<h2>
-          </<p>
-      </div>
-    </div>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light"style="margin-top: 30px; margin-bottom:30px;">
+  <body class style="background-color: #fff">
+    <!--Header-->
+    <div class="page-Header" style="background-color: rgb(224,224,224);">
+          <div class="row">
+            <div class="container col-md-2"> </div>
+            <img class="img-responsive col-md-5" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png">
+            <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: 'Segoe UI Emoji'; font-size: 1.5rem; color: #777;margin-top:30px;" <h4> Programa Beneficiarios <br> Asistencias </4h4>
+              </<p>
+          </div>
+    <nav class="navbar navbar-expand-sm navbar-light"style="margin-top: 30px; margin-bottom:30px;">
             <div class="container">
-              <dt href="#" class="navbar navbar-brand" style=" color: rgb(30,99,109);">Inicio</dt>
+              <dt href="#" class="navbar navbar-brand border border-secondary rounded" style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Inicio</dt>
               <button class="navbar-toggler" data-toggle="collapse" data-target="#NavBar">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="NavBar">
                   <ul class="navbar-nav">
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Seguimientos</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Seguimientos</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Actualizaciones</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Actualizaciones</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Alta Usuario</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Alta Usuario</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Data Admin</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Data Admin</dt>
                       </li>
                   </ul>
               </div>
             </div>
         </nav>
+      </div>
     <!--Termina codigo Header-->
     <!--Formulario-->
-    <div class="container mh-60" alt="Max-height: 60%">
-      <div class="row col-md-12">
-        <div class="container col-md-3">
-          <div class="dropdown">
-            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="margin-top: 10px; margin-bottom: 10px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
-              Tipo de Busqueda
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">CURP</a></li>
-              <li><a href="#">Nombre Completo</a></li>
-              <li><a href="#">Telefono</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="container col-md-3">
-          <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" data-toggle="dropdown"
-              style="margin-top: 10px; margin-bottom: 10px; color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));margin-left:65px;">Eventos</button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Evento 1</a></li>
-              <li><a href="#">Evento 2</a></li>
-              <li><a href="#">Evento 3</a></li>
-              <li><a href="#">Evento 4</a></li>
-              <li><a href="#">Evento 5</a></li>
-              <li><a href="#">Evento 6</a></li>
-              <div class="dropdown-divider"></div>
-              <li><a href="#" data-toggle="modal" data-target="#modal1">Agregar Evento</a></li>
-            </ul>
-          </div>
-          <!--Formulario de otro evento -->
-          <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1-label">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Nuevo Evento</h5>
-                  <button class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <div class="form">
-                      <label for="Nuevo Evento">Evento</label>
-                      <input type="text" placeholder="Nombre del Evento" class="form-control">
+      <div class="container" style="margin-top: 70px; margin-bottom: 70px;">
+        <div class="row">
+          <div class="col-md-3"style="display:flex; align-items: center; justify-content: center;">
+           <img class="img-responsive" src="img/familia.png" >
+         </div>
+          <div class="col-md-8">
+            <div class="card shadow-lg rounded">
+              <div class="card-header text-center" style="background-color:rgb(60,180,173);color: #fff;font-family: 'Segoe UI Emoji';font-size: 1.2rem;">Crear<br>
+                <p>Beneficiario</p>
+              </div>
+              <div class="card-body">
+                <div class="row col-md-12">
+                  <div class="container col-md-4">
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-secondary dropdown-toggle btn-block btn-sm" data-toggle="dropdown" id="dropdownMenuButton"aria-haspopup="true" aria-expanded="false"style="margin-bottom:10px; color: #fff;	background-color: rgb(60,180,173);">
+                        Tipo de Busqueda
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">CURP</a></li>
+                        <li><a class="dropdown-item" href="#">Nombre Completo</a></li>
+                        <li><a class="dropdown-item" href="#">Telefono</a></li>
+                      </ul>
                     </div>
-                  </form>
-                  <div class="modal-footer">
-                    <button class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));" data-dismiss="modal">Confirmar</button>
+                  </div>
+                  <div class="container col-md-2">
+                    <div class="dropdown">
+                      <button type="button" class="btn btn-secondary dropdown-toggle btn-block btn-sm" data-toggle="dropdown" id="dropdownMenuButton"aria-haspopup="true" aria-expanded="false"style=" margin-bottom:10px; color: #fff;	background-color: rgb(60,180,173);">
+                        Eventos
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Evento 1</a></li>
+                        <li><a class="dropdown-item" href="#">Evento 2</a></li>
+                        <li><a class="dropdown-item" href="#">Evento 3</a></li>
+                        <li><a class="dropdown-item" href="#">Evento 4</a></li>
+                        <li><a class="dropdown-item" href="#">Evento 5</a></li>
+                        <li><a class="dropdown-item" href="#">Evento 6</a></li>
+                        <div class="dropdown-divider"></div>
+                        <li><a class="dropdown-item"href="#" data-toggle="modal" data-target="#modal1">Agregar Evento</a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <!--Formulario de otro evento -->
+                  <div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1-label">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header" style="background-color:rgb(60,180,173);color: #fff;font-family: 'Segoe UI Emoji';">
+                          <h5 class="modal-title">Nuevo Evento</h5>
+                          <button class="close" data-dismiss="modal">×</button>
+                        </div>
+                        <div class="modal-body">
+
+                          <form>
+                            <div class="form">
+                              <label for="Nuevo Evento">Evento</label>
+                              <input type="text" placeholder="Nombre del Evento" class="form-control">
+                            </div>
+                          </form>
+                          <div class="modal-footer">
+                            <button class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
+                            <button class="btn btn-secondary btn-sm" style="color: #fff;  background-color: rgb(60,180,173);" data-dismiss="modal">Confirmar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!--Termina codigo Formulario de otro evento -->
+                  <div class="container col-md-5">
+                    <div class="input-group input-group-sm mb-3">
+                      <input type="text" class="form-control" placeholder="BUSQUEDA">
+                      <div class="input-group-prepend">
+                        <span class="input-group">
+                          <button type="button" class="btn btn-secondary btn-sm" style="color: #fff;  background-color: rgb(60,180,173);">Buscar</button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">NOMBRE(S)</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="NOMBRE (S)" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">1er APELLIDO</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="1er APELLIDO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">2do APELLIDO</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="2do APELLIDO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">CORREO ELECTRONICO</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control" placeholder="CORREO ELECTRONICO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">TELEFONO 1</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="TELEFONO 1" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">TELEFONO 2</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control" placeholder="TELEFONO 2" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">CURP</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="CURP" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+                <div class="container col-md-6">
+                  <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">CODIGO POSTAL</label>
+                  <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                    </div>
+                    <input type="text" class="form-control" placeholder="CODIGO POSTAL" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+                  </div>
+                </div>
+              </div>
+              <div class="row col-md-12">
+                <div class="container col-md-6 ">
+                  <div class="input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <input type="checkbox" aria-label="Checkbox for following text input">Asistencia
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="container col-md-6">
+                  <div class="dropdown">
+                    <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown"id="dropdownMenuButton"aria-haspopup="true" aria-expanded="false" style="margin-bottom: 10px; color: #fff;background-color: rgb(60,180,173);">
+                      Seguimiento Llamada
+                    </button> <a class="text-right col-sm-11" style="font-family:'Segoe UI Emoji'; font-size: .8rem; color: #777;margin-top: 10px; margin-bottom: 10px;">* Campo obligatorio</a>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Llamada 1</a></li>
+                      <li><a class="dropdown-item" href="#">Llamada 2</a></li>
+                      <li><a class="dropdown-item"  href="#">Llamada 3</a></li>
+                      <li><a class="dropdown-item" href="#">Confirmado</a></li>
+                      <li><a class="dropdown-item" href="#">Sin Respuesta</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer" style="background-color:#fff;">
+                <div class="row col-md-12" style="margin-top: 10px; margin-bottom: 10px;">
+                  <div class=" container col-md-3">
+                    <button type="button" class="btn btn-secondary btn-block btn-md" href="#" style="  margin-bottom: 15px;color: #fff;	background-color: rgb(60,180,173);">Crear</button>
+                  </div>
+                  <div class=" container col-md-3">
+                    <button type="button" class="btn btn-danger btn-block btn-md" href="#">Cancelar</button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <!--Termina codigo Formulario de otro evento -->
-        </div>
-        <div class="container col-md-6">
-          <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
-            <input type="text" class="form-control" placeholder="BUSQUEDA">
-            <div class="input-group-prepend">
-              <span class="input-group">
-                <button type="button" class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
-              </span>
-            </div>
-          </div>
+          <div class="col-md-1"></div>
         </div>
       </div>
-      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
+      <!--Termina codigo Formulario-->
+      <!--Footer -->
+      <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
+        <div class="container-fluid text-center text-md-left">
+          <div class="row">
+            <div class="text-center col-md-5">
+              <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a"
+                src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
             </div>
-            <input type="text" class="form-control" placeholder="NOMBRE (S)" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
-            </div>
-            <input type="text" class="form-control" placeholder="APELLIDO PATERNO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-      </div>
-      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
-            </div>
-            <input type="text" class="form-control" placeholder="APELLIDO MATERNO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-            </div>
-            <input type="text" class="form-control" placeholder="CORREO ELECTRONICO" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-      </div>
-      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
-            </div>
-            <input type="text" class="form-control" placeholder="TELEFONO 1" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-            </div>
-            <input type="text" class="form-control" placeholder="TELEFONO 2" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-      </div>
-      <div class="row col-md-12" style=" margin-top: 10px; margin-bottom: 10px; ">
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">*</span>
-            </div>
-            <input type="text" class="form-control" placeholder="CURP" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-        <div class="container col-md-5">
-          <div class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-            </div>
-            <input type="text" class="form-control" placeholder="CODIGO POSTAL" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-          </div>
-        </div>
-      </div>
-      <div class="row col-md-12">
-        <div class="container col-md-5 ">
-          <div class="input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <input type="checkbox" aria-label="Checkbox for following text input">Asistencia
-              </div>
+            <div class="container col-md-2 mb-md-0 mb-3"></div>
+            <div class="container col-md-5 mb-md-0 mb-3 text-left">
+              <h5 class="text-muted" style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
+              <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
+              <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
+                <br> webmaster@zapopan.gob.mx </p>
             </div>
           </div>
         </div>
-        <div class="container col-md-5">
-          <div class="dropdown">
-            <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown" style="margin-top: 10px; margin-bottom: 10px; color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">
-              Seguimiento Llamada
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Llamada 1</a></li>
-              <li><a href="#">Llamada 2</a></li>
-              <li><a href="#">Llamada 3</a></li>
-              <li><a href="#">Confirmado</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <p class="text-right col-sm-11" style="font-family: Helvetica Neue; font-size: 1rem; color: #777;margin-top: 10px; margin-bottom: 10px;">* Campo obligatorio</p>
-      <div class="row col-md-12" style="margin-top: 10px; margin-bottom: 20px;">
-        <div class=" container col-md-4 text-left">
-          <button type="button" class="btn btn-secondary btn-md" href="#" style="  color: #fff;	background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Crear</button>
-        </div>
-        <div class=" container col-md-4 text-right">
-          <button type="button" class="btn btn-danger btn-md" href="#">Cancelar</button>
-        </div>
-      </div>
-    </div>
-    <!--Termina codigo Formulario-->
-    <!--Footer -->
-    <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
-  <div class="container-fluid text-center text-md-left">
-    <div class="row">
-      <div class="text-center col-md-5">
-      <img class="img-fluid" alt="escudo zapopan" data-entity-type="file" data-entity-uuid="b01d58a5-646d-4470-bc6c-bdb14633523a" src="https://servicios.zapopan.gob.mx:8000/wwwportal/publicfiles/inline-images/zapCiudninosverticalnegro-1008x530.png">
-    </div>
-    <div class="container col-md-2 mb-md-0 mb-3"></div>
-      <div class="container col-md-5 mb-md-0 mb-3 text-left">
-          <h5 class="text-muted"style="font-size: 1.5rem; color: #777;"> <b>Dirección</b></h5>
-          <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;"> Municipio de Zapopan, Jalisco <br> Avenida Hidalgo 151, Zapopan <br>45100 Zapopan, Jal. <br> 33 3818 2200 </p>
-          <p class="mb-0 text-muted" style="font-size: 1rem; color: #777;">
-            <br> webmaster@zapopan.gob.mx </p>
-        </div>
-      </div>
-      </div>
-      <p class="text-Center col-sm-11" style="font-size: 1rem; color: #777;margin-top: 5px; margin-bottom: 10px;">© 2014-2020. Zapiensa-Desarrollos</p>
-    </footer>
+        <p class="text-Center col-sm-11" style="font-size: 1rem; color: #777;margin-top: 5px; margin-bottom: 10px;">© 2014-2020. Zapiensa-Desarrollos</p>
+      </footer>
 
-  </body>
+    </body>
 
-  </html>
+    </html>

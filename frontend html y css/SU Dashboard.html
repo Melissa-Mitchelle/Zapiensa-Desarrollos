@@ -9,39 +9,40 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
   </head>
-  <body class style="background-color: rgb(234,234,234)">
-        <!--Header-->
-    <div class="container mh-20" alt="Max-height: 20%">
-      <div class="row">
-        <img class="img-fluid col-md-7" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png" height="119.36" width="508">
-        <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: Helvetica Neue; font-size: 1.5rem; color: #777; text-decoration: underline;" <h2> Programa Beneficiarios <br> Asistencias </<h2>
-          </<p>
-      </div>
-    </div>
-    <nav class="navbar navbar-expand-sm navbar-light bg-light"style="margin-top: 30px; margin-bottom:30px;">
+  <body class style="background-color: #fff">
+    <!--Header-->
+    <div class="page-Header" style="background-color: rgb(224,224,224);">
+          <div class="row">
+            <div class="container col-md-2"> </div>
+            <img class="img-responsive col-md-5" alt="Bienvenido al portal oficial Gobierno de Zapopan" src="img/Zapopan.png">
+            <p class="col-md-5 text-fluid text-center text-sm-center align-text-top" style="font-family: 'Segoe UI Emoji'; font-size: 1.5rem; color: #777;margin-top:30px;" <h4> Programa Beneficiarios <br> Asistencias </4h4>
+              </<p>
+          </div>
+    <nav class="navbar navbar-expand-sm navbar-light"style="margin-top: 30px; margin-bottom:30px;">
             <div class="container">
-              <dt href="#" class="navbar navbar-brand" style=" color: rgb(30,99,109);">Inicio</dt>
+              <dt href="#" class="navbar navbar-brand border border-secondary rounded" style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Inicio</dt>
               <button class="navbar-toggler" data-toggle="collapse" data-target="#NavBar">
                 <span class="navbar-toggler-icon"></span>
               </button>
               <div class="collapse navbar-collapse" id="NavBar">
                   <ul class="navbar-nav">
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Seguimientos</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Seguimientos</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Actualizaciones</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Actualizaciones</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Alta Usuario</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Alta Usuario</dt>
                       </li>
                       <li class="nav-item">
-                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);">Data Admin</dt>
+                          <dt href="#" class="nav-link"style=" color: rgb(30,99,109);font-family: 'Segoe UI Emoji';">Data Admin</dt>
                       </li>
                   </ul>
               </div>
             </div>
         </nav>
+      </div>
     <!--Termina codigo Header-->
     <!--Formulario-->
     <div class="container mh-60" alt="Max-height: 60%">
@@ -51,17 +52,33 @@
             <input type="text" class="form-control" placeholder="CURP">
             <div class="input-group-prepend">
               <span class="input-group">
-                <button type="button" class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-toggle="modal" data-target=".modal4-sm"style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
               </span>
             </div>
           </div>
         </div>
+        <!--Formulario de No curp  -->
+  <div class="modal fade modal4-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+              <div class="modal-header"style="background-color:rgb(30,99,109);color: rgb(234,234,234);"></div>
+                 <div class="modal-body">
+                   <h4 style="font-family: 'Segoe UI Emoji';font-size: 1rem; color:rgb(30,99,109);">CURP Invalida</h4>
+                 </div>
+               </div>
+            </div>
+          </div>
+        <!--Termina codigo Formulario de No curp-->
       </div>
       <section>
-        <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
+        <div class="row">
+          <div class="col-md-2"style="display:flex; align-items: center; justify-content: center;">
+           <img class="img-responsive" src="img/niño.png" > </div>
+        <div class="container col-md-8">
+        <div class="table-responsive-sm" style="margin-top: 30px; margin-bottom: 30px;">
           <table class="table">
             <thead>
-              <tr class="table-secondary">
+              <tr class="table-secondary" style="color: rgb(30,99,109);font-family: 'Segoe UI Emoji';font-size: 1rem;" >
                 <th>Original</th>
                 <th>Modificacion</th>
                 <th>Accion</th>
@@ -96,7 +113,7 @@
             </tbody>
           </table>
       </section>
-      <div class="col-sm-12 col-md-12"style=" margin-top: 10px; margin-bottom: 30px;">
+      <div class="col-sm-8 col-md-8"style=" margin-top: 10px; margin-bottom: 30px;">
         <div class="dataTables_paginate paging_simple_numbers" id="dtBasicExample_paginate">
           <ul class="pagination justify-content-end">
             <li class="paginate_button page-item previous disabled"style="font-size: 1rem; " id="dtBasicExample_previous"><a href="#" aria-controls="dtBasicExample" data-dt-idx="0" tabindex="0" class="page-link"><<</a></li>
@@ -111,7 +128,10 @@
         </div>
       </div>
 </div>
-
+</div>
+<div class="container col-md-2"></div>
+</div>
+</div>
     <!--Termina codigo Formulario-->
     <!--Footer -->
     <footer class="page-footer pt-4 mh-20" alt="Max-height: 20%" style="background-image: linear-gradient(to bottom, rgb(224,224,224), rgb(224,224,224));">
