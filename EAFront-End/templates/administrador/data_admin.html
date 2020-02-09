@@ -42,6 +42,16 @@ Data Admin
                   </select>
                </div>
           <br>
+              <div class="dropdown2">
+                <label for="selection_file">Evento a Asignar</label>
+                <select name="e_name" class="form-control" id="selection_file2">
+                  <option value="">Evento</option>
+                  {% for row in e_list %}
+                  <option>{{row[0]}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+          <br>
 
           <div class="form-group">
             <button type="submit" class="btn btn-primary pull-right btn-sm" onclick="submit">Importar</button>

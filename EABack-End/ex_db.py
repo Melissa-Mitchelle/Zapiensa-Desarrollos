@@ -1,4 +1,4 @@
-import os, time
+import os, time, datetime
 from os import remove
 
 from flask_security import roles_required
@@ -27,7 +27,12 @@ def importation():
         filsource = os.path.join(os.path.dirname(__file__), 'uploads', file_.filename)
         filtype = tipo_
         equery3 = equery4 = equery5 = equery6 = equery7 = """"""
-        equery8 = """UPDATE OR IGNORE 'RECEIVERS' SET birthdate= SUBSTR(curp, 5,6), gender= SUBSTR(curp, 11,1)"""
+        equery8 = """UPDATE OR IGNORE 'RECEIVERS' SET birthdate=(
+                        CASE
+                         WHEN substr(curp, 5, 2)<20 THEN '20'||SUBSTR(curp, 5,2)||'-'||SUBSTR(curp, 7,2)||'-'||
+                         SUBSTR(curp, 9,2)
+                         ELSE '19'||SUBSTR(curp, 5,2)||'-'||SUBSTR(curp, 7,2)||'-'||SUBSTR(curp, 9,2)
+                        END), gender= SUBSTR(curp, 11,1)"""
         if filtype == 'Tipo ZAP Academy':
             condb = 'Ben_1.db'
             equery = """SELECT "NOMBRE", "PRIMER APELLIDO", "SEGUNDO APELLIDO", "CURP", "CELULAR", "TELÉFONO CASA", 

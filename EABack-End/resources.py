@@ -155,7 +155,7 @@ class ReceiverDataByCurpGuest(Resource):
             if receiver:
                 ser_receiver = receiver_schema.dump(receiver, many=True)
                 return [{key: value for (key, value) in item.items() if
-                         key in ['first_name', 'last_name', 'events', 'curp']} for item in ser_receiver], 200
+                         key in ['given_name', 'last_name', 'events', 'curp']} for item in ser_receiver], 200
             else:
                 return make_response('Not found', 404)
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
@@ -205,7 +205,7 @@ class DeleteUser(Resource):
 
 
 class EditUser(Resource):
-    @roles_required('ADMINISTRADORISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def put(self, id_user):
         req_data = request.get_json()
         errors = user_schema.validate(req_data)
@@ -226,7 +226,7 @@ class EditUser(Resource):
 
 
 class CreateReceiver(Resource):
-    @roles_required('ADMINISTRADORISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def post(self):
         req_data = request.get_json()
         req_data.update({'created_user': current_user.id})
@@ -247,7 +247,7 @@ class CreateReceiver(Resource):
 
 
 class DeleteReceiver(Resource):
-    @roles_required('ADMINISTRADORISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def delete(self, id_receiver):
         try:
             receiver = ReceiverModel.get_one_receiver(id_receiver)
@@ -328,7 +328,7 @@ class ReceiversModifications(Resource):
 
 
 class ApproveReceiverModification(Resource):
-    @roles_required('ADMINISTRADORISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def get(self, id_receiver):
 
         receiver_mirror = ReceiverMirrorModel.get_one_receiver(id_receiver)

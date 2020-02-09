@@ -23,8 +23,8 @@ let firstSearchableCol = 0;
             {%for rm in receivers_modifications %}
               <tr>
               <span>
-                <td>{{rm['receiver']['first_name']}} {{rm['receiver']['last_name']}} {{rm['receiver']['s_last_name'] if rm['receiver']['s_last_name'] is not none}}, <br>
-                  {% if rm['receiver']['age'] is not none %} {{ rm['receiver']['age'] }}, <br> {% endif %}
+                <td>{{rm['receiver']['given_name']}} {{rm['receiver']['last_name']}} {{rm['receiver']['s_last_name'] if rm['receiver']['s_last_name'] is not none}}, <br>
+                  {% if rm['receiver']['birthdate'] is not none %} {{ rm['receiver']['birthdate'] }}, <br> {% endif %}
                   {{rm['receiver']['curp']}}, <br>{% if rm['receiver']['email'] is not none %} {{ rm['receiver']['email'] }}, <br> {% endif %}
                   {% if rm['receiver']['p_phone'] is not none %} {{ rm['receiver']['p_phone'] }}, <br> {% endif %}
                   {% if rm['receiver']['s_phone'] is not none %} {{ rm['receiver']['s_phone'] }}, <br> {% endif %}
@@ -32,10 +32,10 @@ let firstSearchableCol = 0;
                   {% if rm['receiver']['zip_code'] is not none %} {{ rm['receiver']['zip_code'] }} <br> {% endif %}
                 </td>
                  <td>
-                    <span {% if rm['receiver']['first_name'] != rm['mirror']['first_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['first_name']}}</span>
+                    <span {% if rm['receiver']['given_name'] != rm['mirror']['given_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['given_name']}}</span>
                     <span {% if rm['receiver']['last_name'] != rm['mirror']['last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['last_name']}}</span>
                     <span {% if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['s_last_name'] ~ ', </span><br>'|safe if rm['mirror']['s_last_name'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] }}
-                    <span {% if rm['receiver']['age'] != rm['mirror']['age'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['age'] ~ ', </span><br>'|safe if rm['mirror']['age'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['age'] != rm['mirror']['age'] }}
+                    <span {% if rm['receiver']['birthdate'] != rm['mirror']['birthdate'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['birthdate'] ~ ', </span><br>'|safe if rm['mirror']['birthdate'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['birthdate'] != rm['mirror']['birthdate'] }}
                     <span {% if rm['receiver']['curp'] != rm['mirror']['curp'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['curp'] if rm['mirror']['curp'] is not undefined else 'nulo' if rm['receiver']['curp'] != rm['mirror']['curp'] }}</span>, <br>
                     <span {% if rm['receiver']['email'] != rm['mirror']['email'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['email'] ~ ', </span><br>'|safe if rm['mirror']['email'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['email'] != rm['mirror']['email'] }}
                     <span {% if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['p_phone'] if rm['mirror']['p_phone'] is not undefined else 'nulo' if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] }}</span>, <br>
