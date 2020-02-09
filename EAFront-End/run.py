@@ -290,7 +290,7 @@ def edit_receiver():
 def data_admin():
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                        'Tipo Jalisco te Reconoce', 'Otro Tipo'],
-                           fecha=time.strftime("%Y%m%d-%H%M%S"))
+                           fecha=time.strftime("%Y%m%d-%H%M%S"), e_list=[('JALISCO TE RECONOCE',), ('ZAP ACADEMY',)])
 
 
 @app.route("/importar", methods=['POST'])

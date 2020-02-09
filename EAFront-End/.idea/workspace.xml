@@ -1,25 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/../ComplemetoBack/.idea/ComplemetoBack.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/EABack-End.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/rSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../EABack-End/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EABack-End/Ben_1.db" beforeDir="false" />
+    <list default="true" id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="Modificación campos given_name, birthdate, gender">
       <change beforePath="$PROJECT_DIR$/../EABack-End/ex_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/ex_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EABack-End/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../EABack-End/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/resources.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/EAFront-End.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/EAFront-End.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/administrador/create_user.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/create_user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/administrador/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/administrador/data_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/data_admin.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +17,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="UPDATE_TYPE" value="MERGE" />
   </component>
   <component name="ProjectId" id="1WkotwEoH9nEqSDqnW5Y4NpYZck" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -95,29 +85,49 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="137" y="20" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1581179434971" />
+    <state x="164" y="0" key="CommitChangelistDialog2" timestamp="1581212077173">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="164" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1581212077173" />
     <state x="463" y="120" key="FileChooserDialogImpl" timestamp="1581179398534">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="120" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581179398534" />
-    <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1581189107288">
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1581211122643">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581189107288" />
-    <state width="1345" height="179" key="GridCell.Tab.0.center" timestamp="1581189107286">
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
+    <state width="1345" height="179" key="GridCell.Tab.0.center" timestamp="1581211122643">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581189107286" />
-    <state width="1345" height="179" key="GridCell.Tab.0.left" timestamp="1581189107286">
+    <state width="1345" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
+    <state width="1345" height="179" key="GridCell.Tab.0.left" timestamp="1581211122643">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581189107286" />
-    <state width="1345" height="179" key="GridCell.Tab.0.right" timestamp="1581189107287">
+    <state width="1345" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
+    <state width="1345" height="179" key="GridCell.Tab.0.right" timestamp="1581211122643">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581189107287" />
+    <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
+    <state x="129" y="61" key="MergeDialog" timestamp="1581212156455">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="129" y="61" key="MergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1581212156455" />
+    <state x="395" y="81" key="MultipleFileMergeDialog" timestamp="1581212156462">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="395" y="81" key="MultipleFileMergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1581212156462" />
     <state x="184" y="7" key="SettingsEditor" timestamp="1581189659783">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="184" y="7" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1581189659783" />
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2" timestamp="1581212082395">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1581212082395" />
+    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581198661074">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1581198661074" />
   </component>
 </project>
