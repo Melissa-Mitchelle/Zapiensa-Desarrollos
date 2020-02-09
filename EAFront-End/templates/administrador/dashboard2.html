@@ -6,7 +6,8 @@ Dashboard
 let lastSearchableCol = 2;
 let firstSearchableCol = 0;
 
-var options = {
+{%for event in events %}
+var options{{event}} = {
   series: [76, 67],
   chart: {
   height: 390,
@@ -64,6 +65,7 @@ responsive: [{
   }
 }]
 };
+{% endfor %}
 {% endblock %}
 {% block content %}
     <!--Formulario-->
