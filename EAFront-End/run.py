@@ -288,9 +288,10 @@ def edit_receiver():
 @app.route("/dataAdmin", methods=['GET', 'POST'])
 @verify_session
 def data_admin():
+    r = requests.get('http://localhost:5002/checkEvents', headers={'Authentication-Token': session['api_session_token']})
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                        'Tipo Jalisco te Reconoce', 'Otro Tipo'],
-                           fecha=time.strftime("%Y%m%d-%H%M%S"), e_list=[('JALISCO TE RECONOCE',), ('ZAP ACADEMY',)])
+                           fecha=time.strftime("%Y%m%d-%H%M%S"), e_list=r.json())
 
 
 @app.route("/importar", methods=['POST'])

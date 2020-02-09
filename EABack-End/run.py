@@ -30,6 +30,7 @@ api.add_resource(resources.CreateFollow, '/createFollow')
 api.add_resource(resources.ReceiversModifications, '/receiversModifications')
 api.add_resource(resources.Unauthorized, '/unauthorized')
 api.add_resource(resources.CheckRole, '/checkrole')
+api.add_resource(resources.CheckEvents, '/checkEvents')
 #api.add_resource(resources.ImportFromSheet, '/importFromSheet')
 
 if __name__ == '__main__':

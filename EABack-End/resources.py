@@ -6,7 +6,7 @@ from flask_login import current_user
 from flask_security.utils import hash_password
 from config import app, db
 from models import UserModel, UserSchema, ReceiverModel, roles_users, \
-    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, \
+    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, EventsSchema, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
 import ex_db
 
@@ -24,8 +24,18 @@ receiver_schema = ReceiverSchema()
 receiver_mirror_schema = ReceiverMirrorSchema()
 receiver_follows_schema = ReceiverFollowsSchema()
 receiver_events_schema = ReceiverEventsSchema()
+events_schema = EventsSchema()
 user_datastore = SQLAlchemyUserDatastore(db, cUserModel, Roles)
 security = Security(app, user_datastore)
+
+
+#TODO
+class CheckEvents(Resource):
+    @login_required
+    def get(self):
+        events = Events.get_all()
+        ser_events = events_schema.dump(events, many=True)
+        return ser_events
 
 
 class CheckRole(Resource):
