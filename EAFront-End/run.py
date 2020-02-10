@@ -4,7 +4,7 @@ import requests
 from flask import Flask, \
     render_template, send_from_directory, request, url_for, redirect, make_response, session, jsonify, flash, send_file, \
     stream_with_context, Response
-from datetime import timedelta
+from datetime import timedelta, date, datetime
 
 from werkzeug.datastructures import ImmutableMultiDict, Headers
 
@@ -181,23 +181,45 @@ def dashboard_validador():
         return redirect(url_for('login'))
 
 
+def calculate_age(born):
+    today = date.today()
+    return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
+
+
 @app.route("/dashboard2", methods=['GET'])
 @verify_session
 def dashboard2():
     role = session['role']
     try:
-        """if role == 'administrador':
-            r = requests.get('http://localhost:5002/receiversModifications',
-                             headers={'Authentication-Token': session['api_session_token']})
-            if r.ok:
-                return render_template(role + '/dashboard.html', receivers_modifications=r.json())
-            elif r.status_code == 403:
-                return redirect(url_for('login'))
-            else:
-                return r.content, 500
-        else:"""
-        return render_template(role + '/dashboard2.html', events=[1,2,3,4])
+        r = requests.get('http://localhost:5002/checkEvents',
+                         headers={'Authentication-Token': session['api_session_token']})
+        r2 = requests.get('http://localhost:5002/statistics',
+                          headers={'Authentication-Token': session['api_session_token']})
+        rawstats = r2.json()
+        stats_spline = {}
+        for event in rawstats:
+            if event not in stats_spline:
+                stats_spline[event] = {}
+                stats_spline[event]['attendance'] = {}
+                stats_spline[event]['unattendance'] = {}
+
+            for rawdata in rawstats[event]:
+                r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
+                if rawdata['attendance']:
+                    if r_age not in stats_spline[event]['attendance']:
+                        stats_spline[event]['attendance'][r_age] = {}
+                        stats_spline[event]['attendance'][r_age]['M'] = 0
+                        stats_spline[event]['attendance'][r_age]['H'] = 0
+                    stats_spline[event]['attendance'][r_age][rawdata['gender']] += 1
+                else:
+                    if r_age not in stats_spline[event]['unattendance']:
+                        stats_spline[event]['unattendance'][r_age] = {}
+                        stats_spline[event]['unattendance'][r_age]['M'] = 0
+                        stats_spline[event]['unattendance'][r_age]['H'] = 0
+                    stats_spline[event]['unattendance'][r_age][rawdata['gender']] += 1
+        return render_template(role + '/dashboard2.html', events=r.json(), stats_spline=stats_spline)
     except ValueError:
+        print(ValueError.with_traceback())
         return redirect(url_for('login'))
 
 
@@ -288,7 +310,8 @@ def edit_receiver():
 @app.route("/dataAdmin", methods=['GET', 'POST'])
 @verify_session
 def data_admin():
-    r = requests.get('http://localhost:5002/checkEvents', headers={'Authentication-Token': session['api_session_token']})
+    r = requests.get('http://localhost:5002/checkEvents',
+                     headers={'Authentication-Token': session['api_session_token']})
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                        'Tipo Jalisco te Reconoce', 'Otro Tipo'],
                            fecha=time.strftime("%Y%m%d-%H%M%S"), e_list=r.json())
