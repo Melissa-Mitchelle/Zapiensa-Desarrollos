@@ -9,6 +9,7 @@ from models import UserModel, UserSchema, ReceiverModel, roles_users, \
     ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, EventsSchema, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
 import ex_db
+from sqlalchemy import asc, desc
 
 
 def clone_model(model):
@@ -38,6 +39,7 @@ class Statistics(Resource):
             outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
             outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
             outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+            order_by(desc(ReceiverModel.birthdate)). \
             all()
         result = {}
         for row in qryresult:

@@ -24,7 +24,7 @@ let firstSearchableCol = 0;
             <tbody>
               {%for r in receivers %}
               <tr>
-                <td>{{r['first_name']}} {{r['last_name']}} {{r['s_last_name'] if r['s_last_name'] is not none}}</td>
+                <td>{{r['given_name']}} {{r['last_name']}} {{r['s_last_name'] if r['s_last_name'] is not none}}</td>
                 <td>{{r['curp']}}</td>
                 <td>{{r['p_phone']}}</td>
                 <td>{%for e in r['events']%}{{e['name']}}<br>{% endfor %}</td>

@@ -204,6 +204,7 @@ def dashboard2():
                 stats_spline[event]['unattendance'] = {}
 
             for rawdata in rawstats[event]:
+                print(rawdata)
                 r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
                 if rawdata['attendance']:
                     if r_age not in stats_spline[event]['attendance']:
