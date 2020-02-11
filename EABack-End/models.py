@@ -124,6 +124,9 @@ class Events(db.Model):
     id_event = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(256), nullable=False)
 
+    @staticmethod
+    def get_all():
+        return Events.query.all()
 
 class EventsSchema(Schema):
     id_event = fields.Int(dump_only=True)

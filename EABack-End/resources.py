@@ -6,9 +6,11 @@ from flask_login import current_user
 from flask_security.utils import hash_password
 from config import app, db
 from models import UserModel, UserSchema, ReceiverModel, roles_users, \
-    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, \
+    ReceiverSchema, ReceiverMirrorModel, ReceiverMirrorSchema, EventsSchema, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
 import ex_db
+from sqlalchemy import asc, desc
+
 
 def clone_model(model):
     data = model
@@ -21,11 +23,39 @@ def clone_model(model):
 cUserModel = clone_model(UserModel)
 user_schema = UserSchema()
 receiver_schema = ReceiverSchema()
+stats_schema = ReceiverSchema(only=("birthdate", "gender"))
 receiver_mirror_schema = ReceiverMirrorSchema()
 receiver_follows_schema = ReceiverFollowsSchema()
 receiver_events_schema = ReceiverEventsSchema()
+events_schema = EventsSchema()
 user_datastore = SQLAlchemyUserDatastore(db, cUserModel, Roles)
 security = Security(app, user_datastore)
+
+
+class Statistics(Resource):
+    @roles_required('ADMINISTRADOR')
+    def get(self):
+        qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, ReceiverFollows). \
+            outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+            outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+            outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+            order_by(desc(ReceiverModel.birthdate)). \
+            all()
+        result = {}
+        for row in qryresult:
+            if row.id_event not in result:
+                result[row.id_event] = []
+            result[row.id_event].append({**stats_schema.dump(row.ReceiverModel),
+                                         **receiver_follows_schema.dump(row.ReceiverFollows)})
+        return result
+
+
+class CheckEvents(Resource):
+    @login_required
+    def get(self):
+        events = Events.get_all()
+        ser_events = events_schema.dump(events, many=True)
+        return ser_events
 
 
 class CheckRole(Resource):
@@ -82,6 +112,7 @@ class FollowUpdate(Resource):
                 return render_template('500.html', error=e), 500
         else:
             return {'message': 'No se encontro este seguimiento.'}, 403
+
 
 class Follows(Resource):
     @login_required
@@ -352,6 +383,7 @@ class ApproveReceiverModification(Resource):
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 
+
 """
 class ImportFromSheet(Resource):
     #    @roles_required('ADMINISTRADOR')
@@ -363,6 +395,7 @@ class ImportFromSheet(Resource):
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
 """
+
 
 class Unauthorized(Resource):
     def get(self):
