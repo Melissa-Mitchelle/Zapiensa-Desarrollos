@@ -3,10 +3,13 @@
 Resultados
 {% endblock %}
 {% block content %}
-  <div class="container mh-60" alt="Max-height: 60%">
-     <div class="row col-md-12">
-       <div class="container col-md-8">
-         <div class="container col-md-8">
+  <div class="row">
+          <div class="col-md-3" style="display:flex; align-items: center; justify-content: center;">
+            <img class="img-responsive" src="img/niño2.png">
+          </div>
+          <div class="col-md-6">
+            <div class="container">
+              <div class="container">
            <form action="buscar" method="get">
            <div class="input-group input-group-sm mb-3" style=" margin-top: 10px; margin-bottom: 10px; ">
              <input type="text" class="form-control" name="curp" placeholder="CURP">
@@ -32,7 +35,7 @@ Resultados
                 {% for receiver in receivers %}
                   {% for event in receiver.events %}
                     <tr>
-                      <td>{{receiver.first_name}} {{receiver.last_name}} {{receiver.s_last_name if receiver.s_last_name is not none}}</td>
+                      <td>{{receiver.given_name}} {{receiver.last_name}} {{receiver.s_last_name if receiver.s_last_name is not none}}</td>
                       <td>{{receiver.curp}}</td>
                       <td>{{event.name}}</td>
                     </tr>
@@ -54,7 +57,11 @@ Resultados
       </div>-->
      </div>
   </div>
+    <div class="col-md-3" style="display:flex; align-items: center; justify-content: center;">
+            <img class="img-responsive" src="img/perro.png">
+            </div>
 </div>
+
 </div>
 {% endblock %}
 

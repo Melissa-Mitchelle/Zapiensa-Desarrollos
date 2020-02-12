@@ -5,50 +5,107 @@ Dashboard
 {% block maxSearchCols %}
 let lastSearchableCol = 2;
 let firstSearchableCol = 0;
+
+{%for event in events %}
+{% if event['id_event']|string in stats_spline %}
+{% for stattype, statdata in stats_spline[event['id_event']|string].items() %}
+{% set maxcount = namespace(value=0) %}
+var options{{event['id_event']}}{{stattype}} = {
+  series: [
+{% for genderkey in ['M','H'] %}
+{
+  name: '{{genderkey | replace("M","Mujeres") |
+                  replace("H","Hombres")}}',
+  data: [{%for agedata, value in statdata.items() %}
+          {% if maxcount.value < value[genderkey] %} {% set maxcount.value = value[genderkey] %} {% endif %}
+          {{value[genderkey]}},
+          {%endfor%}]
+},
+{% endfor %}
+],
+  chart: {
+  height: 350,
+  type: 'area'
+},
+dataLabels: {
+  enabled: false
+},
+stroke: {
+  curve: 'smooth'
+},
+title: {
+          text: '{{stattype | replace("unattendance","Inasistencias") |
+                  replace("attendance","Asistencias")}}',
+          align: 'left'
+},
+xaxis: {
+  type: 'integer',
+  title: {
+            text:'Edades'
+  },
+  categories: [{% for agekey in statdata %}
+{{agekey}},{%endfor%}]
+},
+yaxis:{
+  title: {
+            text:'No. de Beneficiarios'
+  },
+  tickAmount: {{maxcount.value}},
+  labels: {
+    formatter: function(val) {
+        return val.toFixed(0);
+      }
+  },
+  min: 0,
+  max:{{maxcount.value}}
+},
+responsive: [{
+  breakpoint: 480,
+  options: {
+    legend: {
+        show: false
+    }
+  }
+}]
+};
+{% endfor %}
+{% endif %}
+{% endfor %}
 {% endblock %}
 {% block content %}
     <!--Formulario-->
     <div class="container mh-60" alt="Max-height: 60%">
       <section>
         <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
-          <table id="data" class="table">
-            <thead>
-              <tr class="table-secondary">
-                <th>Original</th>
-                <th>Modificacion</th>
-                <th>Accion</th>
-              </tr>
-            </thead>
-            <span>
-            {%for rm in receivers_modifications %}
-              <tr>
-              <span>
-                <td>{{rm['receiver']['given_name']}} {{rm['receiver']['last_name']}} {{rm['receiver']['s_last_name'] if rm['receiver']['s_last_name'] is not none}}, <br>
-                  {% if rm['receiver']['birthdate'] is not none %} {{ rm['receiver']['birthdate'] }}, <br> {% endif %}
-                  {{rm['receiver']['curp']}}, <br>{% if rm['receiver']['email'] is not none %} {{ rm['receiver']['email'] }}, <br> {% endif %}
-                  {% if rm['receiver']['p_phone'] is not none %} {{ rm['receiver']['p_phone'] }}, <br> {% endif %}
-                  {% if rm['receiver']['s_phone'] is not none %} {{ rm['receiver']['s_phone'] }}, <br> {% endif %}
-                  {% if rm['receiver']['address'] is not none %} {{ rm['receiver']['address'] }}, <br> {% endif %}
-                  {% if rm['receiver']['zip_code'] is not none %} {{ rm['receiver']['zip_code'] }} <br> {% endif %}
-                </td>
-                 <td>
-                    <span {% if rm['receiver']['given_name'] != rm['mirror']['given_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['given_name']}}</span>
-                    <span {% if rm['receiver']['last_name'] != rm['mirror']['last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['last_name']}}</span>
-                    <span {% if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['s_last_name'] ~ ', </span><br>'|safe if rm['mirror']['s_last_name'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['s_last_name'] != rm['mirror']['s_last_name'] }}
-                    <span {% if rm['receiver']['birthdate'] != rm['mirror']['birthdate'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['birthdate'] ~ ', </span><br>'|safe if rm['mirror']['birthdate'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['birthdate'] != rm['mirror']['birthdate'] }}
-                    <span {% if rm['receiver']['curp'] != rm['mirror']['curp'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['curp'] if rm['mirror']['curp'] is not undefined else 'nulo' if rm['receiver']['curp'] != rm['mirror']['curp'] }}</span>, <br>
-                    <span {% if rm['receiver']['email'] != rm['mirror']['email'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['email'] ~ ', </span><br>'|safe if rm['mirror']['email'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['email'] != rm['mirror']['email'] }}
-                    <span {% if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['p_phone'] if rm['mirror']['p_phone'] is not undefined else 'nulo' if rm['receiver']['p_phone'] != rm['mirror']['p_phone'] }}</span>, <br>
-                    <span {% if rm['receiver']['s_phone'] != rm['mirror']['s_phone'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['s_phone'] + ', </span><br>'|safe if rm['mirror']['s_phone'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['s_phone'] != rm['mirror']['s_phone'] }}
-                    <span {% if rm['receiver']['address'] != rm['mirror']['address'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['address'] + ', </span><br>'|safe if rm['mirror']['address'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['address'] != rm['mirror']['address'] }}
-                    <span {% if rm['receiver']['zip_code'] != rm['mirror']['zip_code'] %} style="font-weight: bold;" {% endif %}>{{rm['mirror']['zip_code'] ~ ', </span><br>'|safe if rm['mirror']['zip_code'] is not none else 'nulo, </span><br>'|safe if rm['receiver']['zip_code'] != rm['mirror']['zip_code'] }}
-              <td><div class="btn-group " style="margin-top: 30px; margin-bottom: 30px;"> <a href="javascript:void(0)" data-metodo="aprobar" data-id="{{rm['mirror']['id_receiver_mirror']}}" class="aaction btn btn-outline-primary border btn-sm" style="	border-color: #757575;">Aprobar</a> <a href="javascript:void(0)" data-metodo="cancelar" data-id="{{rm['mirror']['id_receiver_mirror']}}" class="aaction btn btn-outline-primary border text-danger btn-sm" style="	border-color: #757575;">Cancelar</a> </div></td>
-              </tr>
+          <div>
+{%for event in events %}
+            {{event['name']}}
+            <div  class="row" style="margin: auto;width: 80%;">
+    {% if event['id_event']|string in stats_spline %}
+    {% for stattype, statdata in stats_spline[event['id_event']|string].items() %}
+                <div class="column" style="min-width: 400px;">
+
+                <div id="chart{{event['id_event']}}{{stattype}}" style="max-width: 400px; min-height: 437.7px;"></div>
+                  </div>
             {% endfor %}
-            </tbody>
-          </table>
+      {% endif %}
+              </div>
+{% endfor %}
+          </div>
+        </div>
       </section>
 </div>
+<script type="text/javascript">
+{%for event in events %}
+{% if event['id_event']|string in stats_spline %}
+{% for stattype, statdata in stats_spline[event['id_event']|string].items() %}
+    var chart = new ApexCharts(document.querySelector("#chart{{event['id_event']}}{{stattype}}"),
+            options{{event['id_event']}}{{stattype}});
+        chart.render();
+{% endfor %}
+{% endif %}
+{% endfor %}
+        </script>
 
     <!--Termina codigo Formulario-->
      {% endblock %}

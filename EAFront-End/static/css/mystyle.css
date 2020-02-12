@@ -39,6 +39,22 @@
   box-sizing: border-box;
 }
 
+/* Menu */
+
+
+/* Modal */
+.img-status{
+	width: 125px;
+	height: 105px;
+	background-repeat: no-repeat;
+}
+.md-success{
+ background-image: url("../img/check.png");
+}
+.md-fail{
+ background-image: url("../img/no.png");
+}
+
 /* Container for flexboxes */
 .d-row {
   display: flex;

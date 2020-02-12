@@ -1,14 +1,42 @@
 let table;
 
 $(document).ready(function () {
+    $('#mainForm').submit( function(event){
+        event.preventDefault();
+        var form = $('#mainForm');
+        var url = form.attr('action');
 
-        $(document)
+        $.ajax({
+       type: "POST",
+       url: url,
+       data: form.serialize(), // serializes the form's elements.
+       complete: function(data)
+       {
+           $.each(data.responseJSON.msg, function( index, value){
+               $('#md-message').append("- " + value + "</br>");
+           });
+           $('#msgsModal').modal('show');
+           if (data.responseJSON.success){
+               setTimeout(function(){ window.location = data.responseJSON.url; 2500})
+           }
+       }
+     });
+    });
+    $(document)
     .ajaxStart(function() {
         $('#overlay').show();
+        $('#md-message').html('');
     })
     .ajaxStop(function() {
         $('#overlay').hide();
     })
+        .ajaxSuccess( function() {
+            $('.img-status').removeClass('md-fail').addClass('md-success');
+        })
+        .ajaxError(function () {
+            $('.img-status').removeClass('md-success').addClass('md-fail');
+
+        })
     //$('#data thead tr').clone(true).appendTo('#data thead');
     $('#data thead tr:eq(0) th').each(function (i) {
         if(firstSearchableCol <= i && i < lastSearchableCol){

@@ -10,6 +10,7 @@ from werkzeug.datastructures import ImmutableMultiDict, Headers
 
 app = Flask(__name__)
 app.secret_key = 'ZAP/IENSA'
+apiURL = "localhost:5002"
 app.permanent_session_lifetime = timedelta(minutes=15)
 fields_translation = {'given_name': "Nombre",
                       'last_name': "Apellido Paterno",
@@ -22,6 +23,7 @@ fields_translation = {'given_name': "Nombre",
                       'address': "Dirección",
                       'p_phone': "Telefono 1",
                       'roles': "Roles",
+                      'message': "Mensaje"
                       }
 
 
@@ -52,13 +54,13 @@ def follow():
             payload[key] = None
     print(payload)
     if 'id_follow' in request.form:
-        r = requests.put('http://localhost:5002/followUpdate/' + request.form['id_follow'],
+        r = requests.put('http://' + apiURL + '/followUpdate/' + request.form['id_follow'],
                          json=payload,
                          headers={'Authentication-Token': session['api_session_token']}
                          )
         return r.text
     else:
-        r = requests.post('http://localhost:5002/createFollow',
+        r = requests.post('http://' + apiURL + '/createFollow',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
                           )
@@ -68,7 +70,7 @@ def follow():
 @app.route("/seguimientos")
 @verify_session
 def follows():
-    r2 = requests.get('http://localhost:5002/follows', headers={'Authentication-Token': session['api_session_token']})
+    r2 = requests.get('http://' + apiURL + '/follows', headers={'Authentication-Token': session['api_session_token']})
     return render_template('follows.html', receivers_follows=r2.json())
 
 
@@ -83,28 +85,43 @@ def create_user():
             for key, value in request.form.items()
         }
         if 'roles' in payload:
+            if payload['roles'] == '':
+                return jsonify(success=0, msg=['Selecciona un rol para este usuario.'], url=""), 500
+
             payload['roles'] = int(payload['roles'])
         for key, value in payload.items():
             if value == "":
                 payload[key] = None
-        print(payload)
-        r = requests.post('http://localhost:5002/createUser',
+        r = requests.post('http://' + apiURL + '/createUser',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
                           )
         if r.ok:
             flash(r.json()['message'])
-            return render_template(session['role'] + '/create_user.html')
+            return jsonify(success=1, msg=[str(r.json()['message'])],  url=""), 200
         else:
-            for e in r.json():
-                flash(r.json()[e][0] + ' ' + fields_translation[e])
-            return render_template(session['role'] + '/create_user.html')
+            msgs = []
+            print(r.json())
+            if isinstance(r.json(), dict):
+                for key, msge in r.json().items():
+                    if isinstance(msge, list):
+                        for msg in msge:
+                            msgs.append(fields_translation[key] + ": " + msg)
+                    else:
+                        msgs.append(fields_translation[key] + ": " + msge)
+            else:
+                msgs.append(fields_translation[key] + ": " + r.json())
+        return jsonify(success=0, msg=msgs), 500
 
 
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
-    r = requests.get("http://localhost:5002/logout",
-                     headers={'Authentication-Token': session['api_session_token']})
+    try:
+        r = requests.get('http://' + apiURL + '/logout',
+                         headers={'Authentication-Token': session['api_session_token']})
+    except:
+        pass
+
     session.pop('role')
     session.pop('api_session_token')
     return redirect('/')
@@ -118,21 +135,21 @@ def login():
     elif request.method == 'POST':
         payload = {'email': request.form['username'], 'password': request.form['password']}
         with requests.Session() as s:
-            r = s.post('http://localhost:5002/login', json=payload)
+            r = s.post('http://' + apiURL + '/login', json=payload)
             if r.ok:
                 token = r.json()['response']['user']['authentication_token']
                 session['api_session_token'] = token
-                r2 = s.get('http://localhost:5002/checkrole')
+                r2 = s.get('http://' + apiURL + '/checkrole')
                 session['role'] = r2.text.replace('"', '').replace('\n', '').lower()
                 if 'siguiente' in request.args:
-                    return redirect(request.args['siguiente'])
+                    return jsonify(success=1, msg=['Inicio de sesion exitoso'], url=request.args['siguiente']), 200
                 else:
-                    return redirect('/dashboard')
+                    return jsonify(success=1, msg=['Inicio de sesion exitoso'], url='/dashboard'), 200
             else:
                 print(r.json())
                 """for e in r.json()['response']['errors']:
                     flash(r.json()['response']['errors'][e][0])"""
-                return render_template('login.html')
+                return jsonify(success=0, msg=['Verifica que tu usuario y contraseña sean correctos.']), 403
 
 
 @app.route("/crearBeneficiario", methods=['GET', 'POST'])
@@ -148,29 +165,40 @@ def create_receiver():
         for key, value in payload.items():
             if value == "":
                 payload[key] = None
-        r = requests.post('http://localhost:5002/createReceiver',
+        r = requests.post('http://' + apiURL + '/createReceiver',
                           json=payload,
                           headers={'Authentication-Token': session['api_session_token']}
                           )
         if r.ok:
             flash(r.json()['message'])
-            return render_template('create_receiver.html')
+            return jsonify(success=1, msg=[r.json()['message']], url="")
         else:
-            for e in r.json():
-                flash(r.json()[e][0] + ' ' + fields_translation[e])
-            return render_template('create_receiver.html')
+            if r.headers.get('content-type') == "text/html; charset=utf-8":
+                return jsonify(success=0, msg=r.text), 500
+            else:
+                msgs = []
+                if isinstance(r.json(), dict):
+                    for key, msge in r.json().items():
+                        if isinstance(msge, list):
+                            for msg in msge:
+                                msgs.append(fields_translation[key] + ": " + msg)
+                        else:
+                            msgs.append(fields_translation[key] + ": " + msge)
+                else:
+                    msgs.append(fields_translation[key] + ": " + r.json())
+            return jsonify(success=0, msg=msgs), 500
 
 
-@app.route("/dashboard", methods=['GET'])
+@app.route("/modificaciones", methods=['GET'])
 @verify_session
-def dashboard_validador():
+def modifications():
     role = session['role']
     try:
         if role == 'administrador':
-            r = requests.get('http://localhost:5002/receiversModifications',
+            r = requests.get('http://' + apiURL + '/receiversModifications',
                              headers={'Authentication-Token': session['api_session_token']})
             if r.ok:
-                return render_template(role + '/dashboard.html', receivers_modifications=r.json())
+                return render_template(role + '/modifications.html', receivers_modifications=r.json())
             elif r.status_code == 403:
                 return redirect(url_for('login'))
             else:
@@ -186,39 +214,43 @@ def calculate_age(born):
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
 
-@app.route("/dashboard2", methods=['GET'])
+@app.route("/dashboard", methods=['GET'])
 @verify_session
-def dashboard2():
+def dashboard():
     role = session['role']
     try:
-        r = requests.get('http://localhost:5002/checkEvents',
-                         headers={'Authentication-Token': session['api_session_token']})
-        r2 = requests.get('http://localhost:5002/statistics',
-                          headers={'Authentication-Token': session['api_session_token']})
-        rawstats = r2.json()
-        stats_spline = {}
-        for event in rawstats:
-            if event not in stats_spline:
-                stats_spline[event] = {}
-                stats_spline[event]['attendance'] = {}
-                stats_spline[event]['unattendance'] = {}
+        if role == 'administrador':
 
-            for rawdata in rawstats[event]:
-                print(rawdata)
-                r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
-                if rawdata['attendance']:
-                    if r_age not in stats_spline[event]['attendance']:
-                        stats_spline[event]['attendance'][r_age] = {}
-                        stats_spline[event]['attendance'][r_age]['M'] = 0
-                        stats_spline[event]['attendance'][r_age]['H'] = 0
-                    stats_spline[event]['attendance'][r_age][rawdata['gender']] += 1
-                else:
-                    if r_age not in stats_spline[event]['unattendance']:
-                        stats_spline[event]['unattendance'][r_age] = {}
-                        stats_spline[event]['unattendance'][r_age]['M'] = 0
-                        stats_spline[event]['unattendance'][r_age]['H'] = 0
-                    stats_spline[event]['unattendance'][r_age][rawdata['gender']] += 1
-        return render_template(role + '/dashboard2.html', events=r.json(), stats_spline=stats_spline)
+            r = requests.get('http://' + apiURL + '/checkEvents',
+                             headers={'Authentication-Token': session['api_session_token']})
+            r2 = requests.get('http://' + apiURL + '/statistics',
+                              headers={'Authentication-Token': session['api_session_token']})
+            rawstats = r2.json()
+            stats_spline = {}
+            for event in rawstats:
+                if event not in stats_spline:
+                    stats_spline[event] = {}
+                    stats_spline[event]['attendance'] = {}
+                    stats_spline[event]['unattendance'] = {}
+
+                for rawdata in rawstats[event]:
+                    print(rawdata)
+                    r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
+                    if rawdata['attendance']:
+                        if r_age not in stats_spline[event]['attendance']:
+                            stats_spline[event]['attendance'][r_age] = {}
+                            stats_spline[event]['attendance'][r_age]['M'] = 0
+                            stats_spline[event]['attendance'][r_age]['H'] = 0
+                        stats_spline[event]['attendance'][r_age][rawdata['gender']] += 1
+                    else:
+                        if r_age not in stats_spline[event]['unattendance']:
+                            stats_spline[event]['unattendance'][r_age] = {}
+                            stats_spline[event]['unattendance'][r_age]['M'] = 0
+                            stats_spline[event]['unattendance'][r_age]['H'] = 0
+                        stats_spline[event]['unattendance'][r_age][rawdata['gender']] += 1
+            return render_template(role + '/dashboard.html', events=r.json(), stats_spline=stats_spline)
+        else:
+            return render_template(role + '/dashboard.html')
     except ValueError:
         print(ValueError.with_traceback())
         return redirect(url_for('login'))
@@ -229,11 +261,12 @@ def search():
     if request.method == 'GET':
         if 'curp' in request.args and 'role' not in session:
             curp = request.args['curp']
-            r = requests.get('http://localhost:5002/CurpsGuest/' + curp)
+            r = requests.get('http://' + apiURL + '/CurpsGuest/' + curp)
             if r.ok:
                 return render_template('anonymous_search_result.html', receivers=r.json())
             else:
-                flash(r.text)
+                message = "No se encontro registro del CURP en ningun evento."
+                flash(message)
                 return render_template('index.html')
         elif 'role' in session:
             return render_template('search.html')
@@ -247,12 +280,13 @@ def search():
         else:
             search_type = "general"
         r = requests.get(
-            'http://localhost:5002/searchReceiver/' + search_type + '/' + request.form['search_data'],
+            'http://' + apiURL + '/searchReceiver/' + search_type + '/' + request.form['search_data'],
             headers={'Authentication-Token': session['api_session_token']})
         if r.ok:
             return render_template('search_result.html', receivers=r.json())
         else:
-            flash(r.json()['message'])
+            message = "No se encontraron registros."
+            flash(message)
             return render_template('search.html')
 
 
@@ -260,14 +294,14 @@ def search():
 @verify_session
 def modificacion():
     if request.form['metodo'] == 'aprobar':
-        r = requests.get('http://localhost:5002/approveReceiverModification/' + request.form['id'],
+        r = requests.get('http://' + apiURL + '/approveReceiverModification/' + request.form['id'],
                          headers={'Authentication-Token': session['api_session_token']})
         if r.ok:
             return "Satisfactorio", 200
         else:
             return "Error", r.status_code
     elif request.form['metodo'] == 'cancelar':
-        r = requests.get('http://localhost:5002/cancelReceiverModification/' + request.form['id'],
+        r = requests.get('http://' + apiURL + '/cancelReceiverModification/' + request.form['id'],
                          headers={'Authentication-Token': session['api_session_token']})
         if r.ok:
             return "Satisfactorio", 200
@@ -280,7 +314,7 @@ def modificacion():
 def edit_receiver():
     if request.method == 'GET':
         if 'id' in request.args:
-            r = requests.get('http://localhost:5002/receiver/' + request.args['id'],
+            r = requests.get('http://' + apiURL + '/receiver/' + request.args['id'],
                              headers={'Authentication-Token': session['api_session_token']})
             return render_template('edit_receiver.html', receiver=r.json())
         else:
@@ -293,25 +327,45 @@ def edit_receiver():
         for key, value in payload.items():
             if value == "":
                 payload[key] = None
+
+        r = None
         if session['role'] == "administrador":
             payload.pop('id_receiver')
-            r = requests.put('http://localhost:5002/editReceiver/' + request.args['id'],
+            r = requests.put('http://' + apiURL + '/editReceiver/' + request.args['id'],
                              json=payload,
                              headers={'Authentication-Token': session['api_session_token']}
                              )
         elif session['role'] == "validador":
-            r = requests.post('http://localhost:5002/createReceiverMirror',
+            r = requests.post('http://' + apiURL + '/createReceiverMirror',
                               json=payload,
                               headers={'Authentication-Token': session['api_session_token']}
                               )
-        flash(r.json()['message'])
-        return render_template('search.html')
+
+        if r.ok:
+            return jsonify(success=1, msg=['Registro actualizado.'])
+        else:
+            print(r.headers.get('content-type'))
+            if r.headers.get('content-type') == "text/html; charset=utf-8":
+                return jsonify(success=0, msg=r.text), 500
+            else:
+                msgs = []
+                if isinstance(r.json(), dict):
+                    for key, msge in r.json().items():
+                        if isinstance(msge, list):
+                            for msg in msge:
+                                msgs.append(fields_translation[key] + ": " + msg)
+                        else:
+                            msgs.append(fields_translation[key] + ": " + msge)
+                else:
+                    msgs.append(fields_translation[key] + ": " + r.json())
+            return jsonify(success=0, msg=msgs), 500
+
 
 
 @app.route("/dataAdmin", methods=['GET', 'POST'])
 @verify_session
 def data_admin():
-    r = requests.get('http://localhost:5002/checkEvents',
+    r = requests.get('http://' + apiURL + '/checkEvents',
                      headers={'Authentication-Token': session['api_session_token']})
     return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                        'Tipo Jalisco te Reconoce', 'Otro Tipo'],
@@ -326,7 +380,7 @@ def importar():
     print(bin_file)
     data_file = {"fileimported": (bin_file.filename, bin_file.read(), bin_file.content_type)}
     print(data_file)
-    r = requests.post('http://localhost:5002/importation', data={'tipo': request.form['tipo']}, files=data_file,
+    r = requests.post('http://' + apiURL + '/importation', data={'tipo': request.form['tipo']}, files=data_file,
                       verify=False, headers={'Authentication-Token': session['api_session_token']})
     if r.ok:
         flash('Listo.')
@@ -340,7 +394,7 @@ def importar():
 @app.route("/exportar", methods=['GET'])
 @verify_session
 def exportar():
-    r = requests.get('http://localhost:5002/exports?filename=' + request.args['fecha'], stream=True,
+    r = requests.get('http://' + apiURL + '/exports?filename=' + request.args['fecha'], stream=True,
                      headers={'Authentication-Token': session['api_session_token']})
 
     headers = Headers()
@@ -353,7 +407,7 @@ def exportar():
 @app.route("/respaldo", methods=['GET'])
 @verify_session
 def respaldo():
-    r = requests.get('http://localhost:5002/backup', stream=True,
+    r = requests.get('http://' + apiURL + '/backup', stream=True,
                      headers={'Authentication-Token': session['api_session_token']})
 
     headers = Headers()

@@ -206,7 +206,7 @@ class CreateUser(Resource):
         data = user_schema.load(req_data)
         try:
             if UserModel.find_by_username(data['username']):
-                return {'message': 'User {} already exists'.format(data['username'])}
+                return {'message': 'El usuario {} ya existe'.format(data['username'])}, 500
             user = UserModel(data)
             user.password = hash_password(user.password)
             user.create()
@@ -267,7 +267,7 @@ class CreateReceiver(Resource):
         data = receiver_schema.load(req_data)
         try:
             if ReceiverModel.find_by_curp(data['curp']):
-                return {'message': 'Receiver {} already exists'.format(data['curp'])}
+                return {'message': 'El benificiario {} ya existe'.format(data['curp'])}, 500
             receiver = ReceiverModel(data)
             receiver.create()
             return {
@@ -295,7 +295,9 @@ class EditReceiver(Resource):
     @roles_required('ADMINISTRADOR')
     def put(self, id_receiver):
         req_data = request.get_json()
+        print(req_data)
         errors = receiver_schema.validate(req_data)
+        print(errors)
         if errors:
             return errors, 500
         data = receiver_schema.load(req_data, partial=True)

@@ -3,23 +3,56 @@
 Inicio
 {% endblock %}
 {% block content %}
-    <!--Formulario-->
-  <div class="container mh-60" alt="Max-height: 60%">
-     <div class="row col-md-12" style=" margin-top: 80px; margin-bottom: 80px; ">
-       <div class="container col-md-6">
-        <form action="buscar" method="get">
-         <div class="input-group input-group-sm mb-3" style=" margin-top: 60px; margin-bottom: 60px; ">
-           <input type="text" name="curp" class="form-control" placeholder="CURP">
-           <div class="input-group-prepend" >
-             <span class="input-group">
-               <button type="submit" class="btn btn-secondary btn-sm" style="color: #fff;  background-image: linear-gradient(to bottom, rgb(30,99,109), rgb(30,99,109));">Buscar</button>
-             </span>
-           </div>
-         </div>
-        </form>
-       </div>
-  </div>
-  </div>
+<!--Formulario-->
+<form action="buscar" id="buscar" method="get">
+    <div class="container mh-60" alt="Max-height: 60%">
+        <div class="row col-md-12" style="margin-bottom: 10px; ">
+            <div class="container col-md-6">
+                <div class="input-group input-group-sm mb-3" style=" margin-top: 60px; margin-bottom: 60px; ">
+                    <input id="curp" type="text" name="curp" data-length="18" class="form-control" placeholder="CURP">
+                    <div class="input-group-prepend">
+                   <span class="input-group">
+                     <button type="submit" class="btn btn-secondary btn-sm"
+                             style="color: #fff; background-color: rgb(30,99,109);">Buscar</button>
+                   </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container col-md-6" style="display:flex; align-items: center; justify-content: center;">
+            <img class="img-responsive" src="img/familia.png">
+        </div>
+    </div>
+</form>
 
-    <!--Termina codigo Formulario-->
-     {% endblock %}
+<script type="text/javascript">
+    $(function () {
+        $("#buscar").submit(function (e) {
+            e.preventDefault();
+        }).validate({
+            onkeyup: false,
+            onclick: false,
+            rules: {
+                curp: {
+                    required: true,
+                    minlength: 18
+                }
+            },
+            showErrors: function(errorMap, errorList) {
+                 $('#md-message').html('');
+                if (errorList.length > 0) {
+                    $.each(errorList, function () {
+                        $('#md-message').append(" * " + $(this.element).attr('placeholder') + ": " + this.message + "</br>");
+                    });
+                    $('.img-status').removeClass('md-success').addClass('md-fail');
+                    $('#msgsModal').modal('show');
+                }
+            },
+            submitHandler: function (form) {
+                form.submit();
+            },
+        });
+    });
+</script>
+<!--Termina codigo Formulario-->
+{% endblock %}
