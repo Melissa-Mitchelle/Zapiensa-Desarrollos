@@ -227,14 +227,13 @@ def dashboard():
                               headers={'Authentication-Token': session['api_session_token']})
             rawstats = r2.json()
             stats_spline = {}
-            for event in rawstats:
+            for event in rawstats['stats_spline']:
                 if event not in stats_spline:
                     stats_spline[event] = {}
                     stats_spline[event]['attendance'] = {}
                     stats_spline[event]['unattendance'] = {}
 
-                for rawdata in rawstats[event]:
-                    print(rawdata)
+                for rawdata in rawstats['stats_spline'][event]:
                     r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
                     if rawdata['attendance']:
                         if r_age not in stats_spline[event]['attendance']:
@@ -248,7 +247,8 @@ def dashboard():
                             stats_spline[event]['unattendance'][r_age]['M'] = 0
                             stats_spline[event]['unattendance'][r_age]['H'] = 0
                         stats_spline[event]['unattendance'][r_age][rawdata['gender']] += 1
-            return render_template(role + '/dashboard.html', events=r.json(), stats_spline=stats_spline)
+            return render_template(role + '/dashboard.html', events=r.json(), stats_spline=stats_spline,
+                                   total_assistants=rawstats['total_assistants'])
         else:
             return render_template(role + '/dashboard.html')
     except ValueError:

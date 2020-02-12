@@ -6,6 +6,57 @@ Dashboard
 let lastSearchableCol = 2;
 let firstSearchableCol = 0;
 
+{% set totalreceivers = namespace(value=0) %}
+
+        var options = {
+          series: [{%for event, data in total_assistants.items() %}
+                        {% set totalreceivers.value = totalreceivers.value + data['total'] %}
+                        {{(data['assistants'] * data['total'] / 100) * 100}},
+                    {% endfor %}],
+          chart: {
+          height: 350,
+          type: 'radialBar',
+        },
+        plotOptions: {
+          radialBar: {
+            dataLabels: {
+              name: {
+                fontSize: '22px',
+              },
+              value: {
+                fontSize: '16px',
+              },
+              total: {
+                show: true,
+                label: 'No. de Beneficiarios',
+                formatter: function (w) {
+                  // By default this function returns the average of all series. The below is just an example to show the use of custom formatter function
+                  return {{totalreceivers.value}}
+                }
+              }
+            }
+          }
+        },
+        legend: {
+            show: true
+        },
+        labels: [{%for event, data in total_assistants.items() %}
+                        '{{event}}'{{ ',' if total_assistants|length > loop.index }}
+                    {% endfor %}],
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
+        };
+
+
 {%for event in events %}
 {% if event['id_event']|string in stats_spline %}
 {% for stattype, statdata in stats_spline[event['id_event']|string].items() %}
@@ -16,10 +67,8 @@ var options{{event['id_event']}}{{stattype}} = {
 {
   name: '{{genderkey | replace("M","Mujeres") |
                   replace("H","Hombres")}}',
-  data: [{%for agedata, value in statdata.items() %}
-          {% if maxcount.value < value[genderkey] %} {% set maxcount.value = value[genderkey] %} {% endif %}
-          {{value[genderkey]}},
-          {%endfor%}]
+  data: [{%for agedata, value in statdata.items() %}{% if maxcount.value < value[genderkey] %} {% set maxcount.value = value[genderkey] %} {% endif %}
+          {{value[genderkey]}},{%endfor%}]
 },
 {% endfor %}
 ],
@@ -77,6 +126,14 @@ responsive: [{
     <div class="container mh-60" alt="Max-height: 60%">
       <section>
         <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
+            <div><h2>Asistencias por evento</h2>
+                <div  class="row" style="margin: auto;width: 40%;">
+                                    <div class="column" style="min-width: 600px;">
+
+                    <div id="chart" style="max-width: 600px; min-height: 437.7px;"></div>
+                                    </div>
+                </div>
+            </div>
           <div>
 {%for event in events %}
             {{event['name']}}
@@ -96,6 +153,8 @@ responsive: [{
       </section>
 </div>
 <script type="text/javascript">
+var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
 {%for event in events %}
 {% if event['id_event']|string in stats_spline %}
 {% for stattype, statdata in stats_spline[event['id_event']|string].items() %}

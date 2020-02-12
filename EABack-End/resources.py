@@ -33,7 +33,7 @@ security = Security(app, user_datastore)
 
 
 class Statistics(Resource):
-    @roles_required('ADMINISTRADOR')
+#    @roles_required('ADMINISTRADOR')
     def get(self):
         qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, ReceiverFollows). \
             outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
@@ -41,13 +41,30 @@ class Statistics(Resource):
             outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
             order_by(desc(ReceiverModel.birthdate)). \
             all()
-        result = {}
+        stats_spline = {}
         for row in qryresult:
-            if row.id_event not in result:
-                result[row.id_event] = []
-            result[row.id_event].append({**stats_schema.dump(row.ReceiverModel),
-                                         **receiver_follows_schema.dump(row.ReceiverFollows)})
-        return result
+            if row.id_event not in stats_spline:
+                stats_spline[row.id_event] = []
+            stats_spline[row.id_event].append({**stats_schema.dump(row.ReceiverModel),
+                                               **receiver_follows_schema.dump(row.ReceiverFollows)})
+
+        qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, Events.name, ReceiverFollows). \
+            outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+            outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+            outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+            all()
+        total_assistants = {}
+        print(qryresult)
+        for row in qryresult:
+            if row.name not in total_assistants:
+                total_assistants[row.name] = {}
+                total_assistants[row.name]['total'] = 0
+                total_assistants[row.name]['assistants'] = 0
+            if row.ReceiverFollows.attendance:
+                total_assistants[row.name]['assistants'] += 1
+            total_assistants[row.name]['total'] += 1
+
+        return {'stats_spline': stats_spline, 'total_assistants': total_assistants}, 200
 
 
 class CheckEvents(Resource):
