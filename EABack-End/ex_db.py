@@ -22,6 +22,7 @@ def importation():
 
         file_ = request.files['fileimported']
         tipo_ = str(request.form['tipo'])
+        event = int(request.form['e_name'])
         os.makedirs(os.path.join(os.path.dirname(__file__), 'uploads'), exist_ok=True)
         file_.save(os.path.join(os.path.dirname(__file__), 'uploads', file_.filename))
         filsource = os.path.join(os.path.dirname(__file__), 'uploads', file_.filename)
@@ -129,6 +130,15 @@ def importation():
         # return jsonify('Successful Transaction!')
         # flash("Transacción Exitosa!")
         os.remove(os.path.join(os.path.dirname(__file__), 'uploads', file_.filename))
+        if event != 0 or event != '':
+            con3 = sqlite3.connect('zapiensa_project_v2.db')
+            cur3 = con3.cursor()
+            cur3.execute("""INSERT INTO RECEIVERS_EVENTS (id_receiver, id_event)
+                            SELECT a.id_receiver, b.id_event FROM RECEIVERS AS a, EVENTS AS b
+                            WHERE a.id_receiver NOT IN (SELECT id_receiver FROM RECEIVERS_EVENTS)
+                             AND b.id_event={}""".format(event))
+            con3.commit()
+            con3.close()
 
     elif request.method == 'POST' and 'dir_target' in request.values and str(request.form['dir_target']) != '':
         export()
