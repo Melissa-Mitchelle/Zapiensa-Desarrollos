@@ -380,7 +380,7 @@ def importar():
     print(bin_file)
     data_file = {"fileimported": (bin_file.filename, bin_file.read(), bin_file.content_type)}
     print(data_file)
-    r = requests.post('http://' + apiURL + '/importation', data={'tipo': request.form['tipo']}, files=data_file,
+    r = requests.post('http://' + apiURL + '/importation', data={'tipo': request.form['tipo'], 'e_name': request.form['e_name']}, files=data_file,
                       verify=False, headers={'Authentication-Token': session['api_session_token']})
     if r.ok:
         flash('Listo.')
