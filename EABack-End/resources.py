@@ -54,7 +54,6 @@ class Statistics(Resource):
             outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
             all()
         total_assistants = {}
-        print(qryresult)
         for row in qryresult:
             if row.name not in total_assistants:
                 total_assistants[row.name] = {}
@@ -312,9 +311,7 @@ class EditReceiver(Resource):
     @roles_required('ADMINISTRADOR')
     def put(self, id_receiver):
         req_data = request.get_json()
-        print(req_data)
         errors = receiver_schema.validate(req_data)
-        print(errors)
         if errors:
             return errors, 500
         data = receiver_schema.load(req_data, partial=True)
