@@ -8,6 +8,7 @@ from flask import Flask, request, render_template, flash, send_from_directory, s
 from Export import export
 from Respaldo import respaldo
 from config import app
+from appoint import appoint
 
 
 # app = Flask(__name__)
@@ -139,6 +140,7 @@ def importation():
                              AND b.id_event={}""".format(event))
             con3.commit()
             con3.close()
+            appoint()
 
     elif request.method == 'POST' and 'dir_target' in request.values and str(request.form['dir_target']) != '':
         export()

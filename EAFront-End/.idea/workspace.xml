@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="Modificación campos given_name, birthdate, gender">
+    <list default="true" id="8a7d27bf-0074-4c62-bfcc-012687e3dbb6" name="Default Changelist" comment="Modificación formato birthdate, comienzo de lista">
+      <change afterPath="$PROJECT_DIR$/../EABack-End/appoint.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../EABack-End/ex_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/ex_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../EABack-End/resources.py" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/resources.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" beforeDir="false" afterPath="$PROJECT_DIR$/../EABack-End/zapiensa_project_v2.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/administrador/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/administrador/data_admin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/administrador/data_admin.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/search.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,8 +27,9 @@
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/run.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../frontend html y css/ANONIMA iniciodebusqueda.html" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="two.files.diff.last.used.file" value="$PROJECT_DIR$/../frontend html y css/ANONIMA iniciodebusqueda.html" />
   </component>
   <component name="RunManager">
     <configuration name="Run Frontend" type="PythonConfigurationType" factoryName="Python">
@@ -78,56 +77,83 @@
       <option name="presentableId" value="Default" />
       <updated>1581179378521</updated>
     </task>
+    <task id="LOCAL-00001" summary="Modificación formato birthdate, comienzo de lista">
+      <created>1581212078630</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1581212078630</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Modificación formato birthdate, comienzo de lista">
+      <created>1581212182645</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1581212182645</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Modificación formato birthdate, comienzo de lista" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modificación formato birthdate, comienzo de lista" />
   </component>
   <component name="WindowStateProjectService">
     <state x="137" y="20" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1581179434971">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="137" y="20" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1581179434971" />
-    <state x="164" y="0" key="CommitChangelistDialog2" timestamp="1581212077173">
+    <state x="164" y="0" key="CommitChangelistDialog2" timestamp="1581285735975">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="164" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1581212077173" />
-    <state x="463" y="120" key="FileChooserDialogImpl" timestamp="1581179398534">
+    <state x="164" y="0" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1581285735975" />
+    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog" timestamp="1581480223744">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="463" y="120" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581179398534" />
-    <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1581211122643">
+    <state x="92" y="92" width="1182" height="544" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1581480223744" />
+    <state x="463" y="120" key="FileChooserDialogImpl" timestamp="1581469562736">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
-    <state width="1345" height="179" key="GridCell.Tab.0.center" timestamp="1581211122643">
+    <state x="463" y="120" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1581469562736" />
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom" timestamp="1581648156917">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
-    <state width="1345" height="179" key="GridCell.Tab.0.left" timestamp="1581211122643">
+    <state width="1345" height="179" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1581648156917" />
+    <state width="1345" height="179" key="GridCell.Tab.0.center" timestamp="1581648156912">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
-    <state width="1345" height="179" key="GridCell.Tab.0.right" timestamp="1581211122643">
+    <state width="1345" height="179" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1581648156912" />
+    <state width="1345" height="179" key="GridCell.Tab.0.left" timestamp="1581648156912">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581211122643" />
+    <state width="1345" height="179" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1581648156912" />
+    <state width="1345" height="179" key="GridCell.Tab.0.right" timestamp="1581648156917">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="1345" height="179" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1581648156917" />
     <state x="129" y="61" key="MergeDialog" timestamp="1581212156455">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="129" y="61" key="MergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1581212156455" />
-    <state x="395" y="81" key="MultipleFileMergeDialog" timestamp="1581212156462">
+    <state x="395" y="81" key="MultipleFileMergeDialog" timestamp="1581554536674">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="395" y="81" key="MultipleFileMergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1581212156462" />
+    <state x="395" y="81" key="MultipleFileMergeDialog/0.0.1366.728@0.0.1366.728" timestamp="1581554536674" />
     <state x="184" y="7" key="SettingsEditor" timestamp="1581189659783">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="184" y="7" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1581189659783" />
-    <state x="275" y="98" key="Vcs.Push.Dialog.v2" timestamp="1581212082395">
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2" timestamp="1581212188833">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="98" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1581212082395" />
-    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581198661074">
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1581212188833" />
+    <state x="379" y="189" key="com.intellij.ide.util.TipDialog" timestamp="1581549942743">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1581198661074" />
+    <state x="379" y="189" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1581549942743" />
+    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1581554458599">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1581554458599" />
   </component>
 </project>
