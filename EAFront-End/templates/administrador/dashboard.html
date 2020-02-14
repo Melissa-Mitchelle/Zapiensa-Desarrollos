@@ -103,6 +103,17 @@ let firstSearchableCol = 0;
           offsetX: 0,
           offsetY: 50
         },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
+            },
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }]
         };
 
 
@@ -160,8 +171,11 @@ yaxis:{
 responsive: [{
   breakpoint: 480,
   options: {
+    chart: {
+              width: 200
+            },
     legend: {
-        show: false
+        show: false,
     }
   }
 }]
