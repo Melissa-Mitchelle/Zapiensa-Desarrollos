@@ -10,6 +10,7 @@ from models import UserModel, UserSchema, ReceiverModel, roles_users, \
     Roles, ReceiverFollows, Events, ReceiversEvents, ReceiverEventsSchema, ReceiverFollowsSchema
 import ex_db
 from sqlalchemy import asc, desc
+from sqlalchemy.orm import aliased
 
 
 def clone_model(model):
@@ -36,9 +37,9 @@ class Statistics(Resource):
 #    @roles_required('ADMINISTRADOR')
     def get(self):
         qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, ReceiverFollows). \
-            outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
-            outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
-            outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+            join(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+            join(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+            join(Events, ReceiversEvents.id_event == Events.id_event). \
             order_by(desc(ReceiverModel.birthdate)). \
             all()
         stats_spline = {}
@@ -49,9 +50,9 @@ class Statistics(Resource):
                                                **receiver_follows_schema.dump(row.ReceiverFollows)})
 
         qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, Events.name, ReceiverFollows). \
-            outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
-            outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
-            outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+            join(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+            join(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+            join(Events, ReceiversEvents.id_event == Events.id_event). \
             all()
         total_assistants = {}
         for row in qryresult:
@@ -63,7 +64,26 @@ class Statistics(Resource):
                 total_assistants[row.name]['assistants'] += 1
             total_assistants[row.name]['total'] += 1
 
-        return {'stats_spline': stats_spline, 'total_assistants': total_assistants}, 200
+        aliasedUser = aliased(UserModel)
+        qryresult = db.session.query(UserModel, ReceiverFollows).join(ReceiverFollows, aliasedUser)
+        users_follows = {}
+        for row in qryresult:
+            if row.UserModel.username not in users_follows:
+                users_follows[row.UserModel.username] = {}
+                users_follows[row.UserModel.username]['total'] = 0
+                users_follows[row.UserModel.username]['notificated'] = 0
+                users_follows[row.UserModel.username]['notification_no_1'] = 0
+                users_follows[row.UserModel.username]['notification_no_2'] = 0
+                users_follows[row.UserModel.username]['notification_no_3'] = 0
+                users_follows[row.UserModel.username]['missing'] = 0
+            users_follows[row.UserModel.username]['total'] += 1
+            if row.ReceiverFollows.notificated:
+                users_follows[row.UserModel.username]['notificated'] += 1
+            elif row.ReceiverFollows.notification_no is not None:
+                users_follows[row.UserModel.username]['notification_no_'+str(row.ReceiverFollows.notification_no)] += 1
+            else:
+                users_follows[row.UserModel.username]['missing'] += 1
+        return {'stats_spline': stats_spline, 'total_assistants': total_assistants, 'users_follows': users_follows}, 200
 
 
 class CheckEvents(Resource):
