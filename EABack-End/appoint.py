@@ -1,4 +1,11 @@
 import sqlite3
+from config import app
+
+@roles_required('ADMINISTRADOR')
+@app.route("/appoint", methods=['GET', 'POST'])
+def appointr():
+    appoint()
+    return 'done',200
 
 
 def appoint():

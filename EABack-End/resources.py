@@ -34,7 +34,7 @@ security = Security(app, user_datastore)
 
 
 class Statistics(Resource):
-#    @roles_required('ADMINISTRADOR')
+    @roles_required('ADMINISTRADOR')
     def get(self):
         qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.id_event, ReceiverFollows). \
             join(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
