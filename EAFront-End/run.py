@@ -213,6 +213,8 @@ def calculate_age(born):
     today = date.today()
     return today.year - born.year - ((today.month, today.day) < (born.month, born.day))
 
+def myround(x, base=5):
+    return base * round(x/base)
 
 @app.route("/dashboard", methods=['GET'])
 @verify_session
@@ -234,7 +236,7 @@ def dashboard():
                     stats_spline[event]['unattendance'] = {}
 
                 for rawdata in rawstats['stats_spline'][event]:
-                    r_age = calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d'))
+                    r_age = myround(calculate_age(datetime.strptime(rawdata['birthdate'], '%Y-%m-%d')))
                     if rawdata['attendance']:
                         if r_age not in stats_spline[event]['attendance']:
                             stats_spline[event]['attendance'][r_age] = {}
@@ -248,7 +250,8 @@ def dashboard():
                             stats_spline[event]['unattendance'][r_age]['H'] = 0
                         stats_spline[event]['unattendance'][r_age][rawdata['gender']] += 1
             return render_template(role + '/dashboard.html', events=r.json(), stats_spline=stats_spline,
-                                   total_assistants=rawstats['total_assistants'])
+                                   total_assistants=rawstats['total_assistants'],
+                                   users_follows=rawstats['users_follows'])
         else:
             return render_template(role + '/dashboard.html')
     except ValueError:

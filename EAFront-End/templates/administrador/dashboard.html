@@ -11,17 +11,18 @@ let firstSearchableCol = 0;
         var options = {
           series: [{%for event, data in total_assistants.items() %}
                         {% set totalreceivers.value = totalreceivers.value + data['total'] %}
-                        {{(data['assistants'] * data['total'] / 100) * 100}},
+                        {{(data['assistants'] * 100 / data['total'])|round(2)}},
                     {% endfor %}],
           chart: {
-          height: 350,
-          type: 'radialBar',
+            height: 350,
+            type: 'radialBar',
+            width: '105%'
         },
         plotOptions: {
           radialBar: {
             dataLabels: {
               name: {
-                fontSize: '22px',
+                fontSize: '18px',
               },
               value: {
                 fontSize: '16px',
@@ -38,7 +39,8 @@ let firstSearchableCol = 0;
           }
         },
         legend: {
-            show: true
+            show: true,
+            offsetX: 45,
         },
         labels: [{%for event, data in total_assistants.items() %}
                         '{{event}}'{{ ',' if total_assistants|length > loop.index }}
@@ -54,6 +56,53 @@ let firstSearchableCol = 0;
             }
           }
         }]
+        };
+
+
+        var options2 = {
+          series: [{
+          name: 'Confirmaciones',
+          data:[{% for user, data in users_follows.items() %}{{data['notificated']}}, {% endfor %}]
+        }, {
+          name: 'Llamada 1',
+          data:[{% for user, data in users_follows.items() %}{{data['notification_no_1']}}, {% endfor %}]
+        }, {
+          name: 'Llamada 2',
+          data:[{% for user, data in users_follows.items() %}{{data['notification_no_2']}}, {% endfor %}]
+        }, {
+          name: 'Llamada 3',
+          data:[{% for user, data in users_follows.items() %}{{data['notification_no_3']}}, {% endfor %}]
+        }, {
+          name: 'Faltantes',
+          data:[{% for user, data in users_follows.items() %}{{data['missing']}}, {% endfor %}]
+        }],
+          chart: {
+          type: 'bar',
+          height: 350,
+          stacked: true,
+          stackType: '100%'
+        },
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
+          }
+        }],
+        xaxis: {
+          categories: [{% for user, data in users_follows.items() %}'{{user}}', {% endfor %}],
+        },
+        fill: {
+          opacity: 1
+        },
+        legend: {
+          position: 'right',
+          offsetX: 0,
+          offsetY: 50
+        },
         };
 
 
@@ -126,11 +175,15 @@ responsive: [{
     <div class="container mh-60" alt="Max-height: 60%">
       <section>
         <div class="table-responsive-sm" style=" margin-top: 30px; margin-bottom: 30px; ">
-            <div><h2>Asistencias por evento</h2>
-                <div  class="row" style="margin: auto;width: 40%;">
-                                    <div class="column" style="min-width: 600px;">
-
-                    <div id="chart" style="max-width: 600px; min-height: 437.7px;"></div>
+            <div>
+                <div  class="row" style="margin: auto;width: 80%;">
+                                    <div class="column" style="min-width: 450px;">
+            <h5>Asistencias por evento</h5>
+                    <div id="chart" style="max-width: 450px; min-height: 437.7px;"></div>
+                                    </div>
+                        <div class="column" style="min-width: 400px;">
+            <h5>Seguimientos por usuario</h5>
+                    <div id="chart2" style="max-width: 450px; min-height: 437.7px;"></div>
                                     </div>
                 </div>
             </div>
@@ -154,6 +207,8 @@ responsive: [{
 </div>
 <script type="text/javascript">
 var chart = new ApexCharts(document.querySelector("#chart"), options);
+        chart.render();
+var chart = new ApexCharts(document.querySelector("#chart2"), options2);
         chart.render();
 {%for event in events %}
 {% if event['id_event']|string in stats_spline %}
