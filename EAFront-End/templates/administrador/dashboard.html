@@ -73,6 +73,9 @@ let firstSearchableCol = 0;
           name: 'Llamada 3',
           data:[{% for user, data in users_follows.items() %}{{data['notification_no_3']}}, {% endfor %}]
         }, {
+          name: 'Sin Respuesta',
+          data:[{% for user, data in users_follows.items() %}{{data['no_answer']}}, {% endfor %}]
+        }, {
           name: 'Faltantes',
           data:[{% for user, data in users_follows.items() %}{{data['missing']}}, {% endfor %}]
         }],
@@ -92,8 +95,10 @@ let firstSearchableCol = 0;
             }
           }
         }],
+        colors: ["rgb(0, 143, 251)","rgb(0, 227, 150)","rgb(254, 176, 25)","rgb(255, 69, 96)", "#e83e8c","rgb(119, 93, 208)"],
         xaxis: {
-          categories: [{% for user, data in users_follows.items() %}'{{user}}', {% endfor %}],
+            categories: [{% for user, data in users_follows.items() %}'{{user}}', {% endfor %}],
+
         },
         fill: {
           opacity: 1
@@ -122,13 +127,16 @@ let firstSearchableCol = 0;
 {% for stattype, statdata in stats_spline[event['id_event']|string].items() %}
 {% set maxcount = namespace(value=0) %}
 var options{{event['id_event']}}{{stattype}} = {
+{% if loop.index == 2 %}
+
+colors: ["rgb(254, 176, 25)","rgb(255, 69, 96)"],
+{% endif %}
   series: [
 {% for genderkey in ['M','H'] %}
 {
   name: '{{genderkey | replace("M","Mujeres") |
                   replace("H","Hombres")}}',
-  data: [{%for agedata, value in statdata.items() %}{% if maxcount.value < value[genderkey] %} {% set maxcount.value = value[genderkey] %} {% endif %}
-          {{value[genderkey]}},{%endfor%}]
+  data: [{%for agedata, value in statdata.items() %}{% if maxcount.value < value[genderkey] %} {% set maxcount.value = value[genderkey] %}{% endif %}{{value[genderkey]}},{%endfor%}]
 },
 {% endfor %}
 ],
@@ -152,8 +160,7 @@ xaxis: {
   title: {
             text:'Edades'
   },
-  categories: [{% for agekey in statdata %}
-{{agekey}},{%endfor%}]
+  categories: [{% for agekey in statdata %}{{agekey}},{%endfor%}]
 },
 yaxis:{
   title: {

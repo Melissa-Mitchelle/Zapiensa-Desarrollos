@@ -18,6 +18,18 @@ Crear Beneficiario
               </div>
             <div class="card-body"></div>
               <div class="row col-md-12">
+                <div style="text-align: right; min-height: 60px" class="container col-md-6">
+                  <label style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">Asignar Beneficiario a Evento(s):</label>
+                </div>
+                <div class="container col-md-6">
+                  <select name="events" id="events" class="form-control"  multiple="multiple" style="display: none;">
+                    {% for row in e_list %}
+                    <option value="{{row['id_event']}}">{{row['name']}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+              </div>
+              <div class="row col-md-12">
                 <div class="container col-md-6">
                   <label for="inputchange" style="font-family: 'Segoe UI Emoji';color: rgb(30,99,109);">NOMBRE(S)</label>
                   <div class="input-group input-group-sm mb-3">
@@ -122,6 +134,7 @@ Crear Beneficiario
           <div class="col-md-1"></div>
       </form>
 <script type="text/javascript">
+      $("#events").bsMultiSelect();
 
 </script>
           <!--Termina codigo Formulario-->

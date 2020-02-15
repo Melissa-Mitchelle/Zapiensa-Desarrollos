@@ -78,6 +78,7 @@ def follows():
 @verify_session
 def create_user():
     if request.method == 'GET':
+
         return render_template(session['role'] + '/create_user.html')
     if request.method == 'POST':
         payload = {
@@ -156,7 +157,9 @@ def login():
 @verify_session
 def create_receiver():
     if request.method == 'GET':
-        return render_template('create_receiver.html')
+        re = requests.get('http://' + apiURL + '/checkEvents',
+                          headers={'Authentication-Token': session['api_session_token']})
+        return render_template('create_receiver.html', e_list=re.json())
     elif request.method == 'POST':
         payload = {
             key: value[0] if len(value) == 1 else value
@@ -319,7 +322,9 @@ def edit_receiver():
         if 'id' in request.args:
             r = requests.get('http://' + apiURL + '/receiver/' + request.args['id'],
                              headers={'Authentication-Token': session['api_session_token']})
-            return render_template('edit_receiver.html', receiver=r.json())
+            re = requests.get('http://' + apiURL + '/checkEvents',
+                             headers={'Authentication-Token': session['api_session_token']})
+            return render_template('edit_receiver.html', e_list=re.json(), receiver=r.json())
         else:
             return 'No se encontro el usuario.'
     elif request.method == 'POST':
@@ -383,8 +388,10 @@ def importar():
     print(bin_file)
     data_file = {"fileimported": (bin_file.filename, bin_file.read(), bin_file.content_type)}
     print(data_file)
+    re = requests.get('http://' + apiURL + '/checkEvents',
+                     headers={'Authentication-Token': session['api_session_token']})
     r = requests.post('http://' + apiURL + '/importation', data={'tipo': request.form['tipo'], 'e_name': request.form['e_name']}, files=data_file,
-                      verify=False, headers={'Authentication-Token': session['api_session_token']})
+                      verify=False, e_list=re.json(), headers={'Authentication-Token': session['api_session_token']})
     if r.ok:
         flash('Listo.')
     else:

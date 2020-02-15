@@ -103,7 +103,9 @@ $(document).ready(function () {
         };
         if (notification === 'confirmado') {
             data['notificated'] = true;
-        } else {
+        } else if (notification === 'sin_respuesta') {
+            data['notificated'] = false;
+        } else{
             data['notification_no'] = notification;
         }
         if (id !== '') {

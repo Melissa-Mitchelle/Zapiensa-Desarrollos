@@ -39,15 +39,18 @@ let firstSearchableCol = 2;
                     <button type="button" class="btn btn-secondary dropdown-toggle btn-sm" data-toggle="dropdown">
                       {% if rf['notificated'] %}
                       Confirmado
+                      {% elif rf['notificated'] == False and rf['notificated'] is defined %}
+                      Sin Respuesta
                       {% else %}
                       {{ 'Llamada ' ~ rf['notification_no'] if rf['notification_no'] is not none else 'Llamadas' }}
                       {% endif %}
                     </button>
                     <ul class="dropdown-menu notificationa"">
-                      <li><a data-notification="1" href="#">Llamada 1</a></li>
-                      <li><a data-notification="2" href="#">Llamada 2</a></li>
-                      <li><a data-notification="3" href="#">Llamada 3</a></li>
-                      <li><a data-notification="confirmed" href="#">Confirmado</a></li>
+                      <li><a data-notification="1" class="dropdown-item" href="#">Llamada 1</a></li>
+                      <li><a data-notification="2" class="dropdown-item" href="#">Llamada 2</a></li>
+                      <li><a data-notification="3" class="dropdown-item" href="#">Llamada 3</a></li>
+                      <li><a class="dropdown-item" data-notification="confirmed" href="#">Confirmado</a></li>
+                      <li><a class="dropdown-item" data-notification="0" href="#">Sin Respuesta</a></li>
                     </ul>
                   </div>
                 </td>

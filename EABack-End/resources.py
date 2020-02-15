@@ -75,12 +75,16 @@ class Statistics(Resource):
                 users_follows[row.UserModel.username]['notification_no_1'] = 0
                 users_follows[row.UserModel.username]['notification_no_2'] = 0
                 users_follows[row.UserModel.username]['notification_no_3'] = 0
+                users_follows[row.UserModel.username]['no_answer'] = 0
                 users_follows[row.UserModel.username]['missing'] = 0
             users_follows[row.UserModel.username]['total'] += 1
             if row.ReceiverFollows.notificated:
                 users_follows[row.UserModel.username]['notificated'] += 1
+            elif row.ReceiverFollows.notificated == False:
+                users_follows[row.UserModel.username]['no_answer'] += 1
             elif row.ReceiverFollows.notification_no is not None:
-                users_follows[row.UserModel.username]['notification_no_'+str(row.ReceiverFollows.notification_no)] += 1
+                users_follows[row.UserModel.username][
+                    'notification_no_' + str(row.ReceiverFollows.notification_no)] += 1
             else:
                 users_follows[row.UserModel.username]['missing'] += 1
         return {'stats_spline': stats_spline, 'total_assistants': total_assistants, 'users_follows': users_follows}, 200
@@ -157,8 +161,10 @@ class Follows(Resource):
             qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event, ReceiverFollows). \
                 outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
                 outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+                filter(ReceiverFollows.id_user == current_user.id). \
                 outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
                 all()
+            print(qryresult)
             result = []
             i = 0
             for row in qryresult:
@@ -167,6 +173,7 @@ class Follows(Resource):
                                **receiver_follows_schema.dump(row.ReceiverFollows),
                                'event': row.name, 'id_event': row.id_event})
                 i += 1
+            print(result)
             return result, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500

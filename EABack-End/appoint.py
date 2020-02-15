@@ -1,5 +1,7 @@
 import sqlite3
 from config import app
+from flask_security import roles_required
+
 
 @roles_required('ADMINISTRADOR')
 @app.route("/appoint", methods=['GET', 'POST'])
