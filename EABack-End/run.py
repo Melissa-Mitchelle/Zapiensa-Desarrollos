@@ -27,6 +27,7 @@ api.add_resource(resources.ApproveReceiverModification, '/approveReceiverModific
 api.add_resource(resources.CancelReceiverModification, '/cancelReceiverModification/<id_receiver>')
 api.add_resource(resources.FollowUpdate, '/followUpdate/<id_follow>')
 api.add_resource(resources.CreateFollow, '/createFollow')
+api.add_resource(resources.CreateEvent, '/createEvent')
 api.add_resource(resources.ReceiversModifications, '/receiversModifications')
 api.add_resource(resources.Unauthorized, '/unauthorized')
 api.add_resource(resources.CheckRole, '/checkrole')

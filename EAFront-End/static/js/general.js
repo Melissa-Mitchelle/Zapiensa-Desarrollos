@@ -57,6 +57,10 @@ $(document).ready(function () {
             $(this).parent().parent().prev().html($(this).html() + '<span class="caret"></span>');
             $('#roles').val($(this).data('id-role'));
     });
+        $('#ue_name a').click( function(event){
+            $(this).parent().parent().prev().html($(this).html() + '<span class="caret"></span>');
+            $('#e_name').val($(this).data('id-event'));
+    });
     table = $('#data').DataTable({
         orderCellsTop: true,
         fixedHeader: true,

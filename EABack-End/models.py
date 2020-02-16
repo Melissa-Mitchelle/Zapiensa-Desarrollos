@@ -73,6 +73,9 @@ class UserModel(db.Model, UserMixin):
     def get_one_user(id_user):
         return UserModel.query.get(id_user)
 
+    def has_role(self, role):
+        return role in self.roles
+
 
 # Define the Role data-model
 class Roles(db.Model, RoleMixin):
@@ -124,9 +127,17 @@ class Events(db.Model):
     id_event = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(256), nullable=False)
 
+    def __init__(self, data):
+        self.name = data.get('name')
+
     @staticmethod
     def get_all():
         return Events.query.all()
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
 
 class EventsSchema(Schema):
     id_event = fields.Int(dump_only=True)

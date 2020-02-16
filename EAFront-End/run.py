@@ -74,6 +74,34 @@ def follows():
     return render_template('follows.html', receivers_follows=r2.json())
 
 
+@app.route("/crearEvento", methods=['GET', 'POST'])
+@verify_session
+def create_event():
+    if request.method == 'GET':
+        return redirect('dataAdmin')
+    payload = {
+        key: value[0] if len(value) == 1 else value
+        for key, value in request.form.items()
+    }
+    r = requests.post('http://' + apiURL + '/createEvent',
+                      json=payload,
+                      headers={'Authentication-Token': session['api_session_token']})
+    if r.ok:
+        flash(r.json()['message'])
+        return redirect('dataAdmin')
+    else:
+        msgs = []
+        if isinstance(r.json(), dict):
+            for key, msge in r.json().items():
+                if isinstance(msge, list):
+                    for msg in msge:
+                        msgs.append(fields_translation[key] + ": " + msg)
+                else:
+                    msgs.append(fields_translation[key] + ": " + msge)
+        else:
+            msgs.append(fields_translation[key] + ": " + r.json())
+        return jsonify(success=0, msg=msgs), 500
+
 @app.route("/crearUsuario", methods=['GET', 'POST'])
 @verify_session
 def create_user():
@@ -391,12 +419,12 @@ def importar():
     re = requests.get('http://' + apiURL + '/checkEvents',
                      headers={'Authentication-Token': session['api_session_token']})
     r = requests.post('http://' + apiURL + '/importation', data={'tipo': request.form['tipo'], 'e_name': request.form['e_name']}, files=data_file,
-                      verify=False, e_list=re.json(), headers={'Authentication-Token': session['api_session_token']})
+                      verify=False, headers={'Authentication-Token': session['api_session_token']})
     if r.ok:
         flash('Listo.')
     else:
         flash(r.content)
-    return render_template('administrador/data_admin.html', una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
+    return render_template('administrador/data_admin.html', e_list=re.json(), una_lista=['Tipo ZAP Academy', 'Tipo Apoyo a Mujeres',
                                                                        'Tipo Jalisco te Reconoce', 'Otro Tipo'],
                            fecha=time.strftime("%Y%m%d-%H%M%S"))
 

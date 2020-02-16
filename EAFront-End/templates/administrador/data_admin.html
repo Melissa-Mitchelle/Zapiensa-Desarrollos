@@ -46,12 +46,19 @@ Data Admin
           <br>
               <div class="dropdown2">
                 <label for="selection_file">Evento a Asignar</label>
-                <select name="e_name" class="form-control" id="selection_file2">
-                  <option value="0">Evento</option>
-                  {% for row in e_list %}
-                  <option value="{{row['id_event']}}">{{row['name']}}</option>
-                  {% endfor %}
-                </select>
+                  <div class="dropdown">
+                          <input type="hidden" id="ue_name" name="e_name">
+                      <button type="button" class="btn btn-secondary dropdown-toggle btn-block btn-sm" data-toggle="dropdown" id="dropdownMenuButton"aria-haspopup="true" aria-expanded="false"style=" margin-bottom:10px; color: #fff;	background-color: rgb(60,180,173);">
+                        Eventos
+                      </button>
+                      <ul data-input="e_name" id="ue_name"  class="dropdown-menu">
+                          {% for row in e_list %}
+                            <li><a data-id-event="{{row['id_event']}}" class="dropdown-item"href="#">{{row['name']}}</a></li>
+                          {% endfor %}
+                        <div class="dropdown-divider"></div>
+                        <li><a class="dropdown-item"href="#" data-toggle="modal" data-target="#modal1">Agregar Evento</a></li>
+                      </ul>
+                    </div>
               </div>
           <br>
 
@@ -93,7 +100,31 @@ Data Admin
         </form>
       </div>
         <!--TERMINA MODIFICACIÓN-->
+<div class="modal fade" id="modal1" tabindex="-1" role="dialog" aria-labelledby="modal1-label">
+    <form action="crearEvento" method="post">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header" style="background-color:rgb(60,180,173);color: #fff;font-family: 'Segoe UI Emoji';">
+                          <h5 class="modal-title">Nuevo Evento</h5>
+                          <button class="close" data-dismiss="modal">×</button>
+                        </div>
+                        <div class="modal-body">
 
+                          <form>
+                            <div class="form">
+                              <label for="Nuevo Evento">Evento</label>
+                              <input type="text" name="name" placeholder="Nombre del Evento" class="form-control">
+                            </div>
+                          </form>
+                          <div class="modal-footer">
+                            <button class="btn btn-danger btn-sm" data-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-secondary btn-sm" style="color: #fff;  background-color: rgb(60,180,173);">Confirmar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+        </form>
+                  </div>
     </div>
         <div class="col-md-5" style="display:flex; align-items: center; justify-content: center;">
      <img class="img-responsive" src="img/giphy.gif">

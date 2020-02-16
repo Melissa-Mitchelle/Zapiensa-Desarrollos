@@ -158,13 +158,20 @@ class Follows(Resource):
     @login_required
     def get(self):
         try:
-            qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event, ReceiverFollows). \
-                outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
-                outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
-                filter(ReceiverFollows.id_user == current_user.id). \
-                outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
-                all()
-            print(qryresult)
+            if current_user.has_role('ADMINISTRADOR'):
+                qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event,
+                                             ReceiverFollows). \
+                    outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+                    outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+                    outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+                    all()
+            else:
+                qryresult = db.session.query(ReceiversEvents, ReceiverModel, Events.name, Events.id_event, ReceiverFollows). \
+                    outerjoin(ReceiverModel, ReceiversEvents.id_receiver == ReceiverModel.id_receiver). \
+                    outerjoin(ReceiverFollows, ReceiverFollows.id_receiver_event == ReceiversEvents.id_receiver_event). \
+                    filter(ReceiverFollows.id_user == current_user.id). \
+                    outerjoin(Events, ReceiversEvents.id_event == Events.id_event). \
+                    all()
             result = []
             i = 0
             for row in qryresult:
@@ -173,7 +180,6 @@ class Follows(Resource):
                                **receiver_follows_schema.dump(row.ReceiverFollows),
                                'event': row.name, 'id_event': row.id_event})
                 i += 1
-            print(result)
             return result, 200
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
@@ -234,6 +240,17 @@ class ReceiverDataByCurpGuest(Resource):
                 return make_response('Not found', 404)
         except (sqlalchemy.exc.SQLAlchemyError, sqlalchemy.exc.DBAPIError) as e:
             return render_template('500.html', error=e), 500
+
+
+class CreateEvent(Resource):
+    @roles_required('ADMINISTRADOR')
+    def post(self):
+        req_data = request.get_json()
+        errors = events_schema.validate(req_data)
+        data = events_schema.load(req_data)
+        event = Events(data)
+        event.create()
+        return {'message': 'Evento ' + event.name + " creado."}, 200
 
 
 class CreateUser(Resource):

@@ -20,8 +20,8 @@ def export(filename):
     bold = workbook.add_format({'bold': True, 'font_color': 'blue'})
     conn = sqlite3.connect('zapiensa_project_v2.db')
     c = conn.cursor()
-    c.execute("SELECT * FROM view_receivers")
-    mysel = c.execute("SELECT * FROM view_receivers")
+    c.execute("SELECT * FROM view_export_follows")
+    mysel = c.execute("SELECT * FROM view_export_follows")
     col_name_list = [tuple[0] for tuple in mysel.description]
     row = 0
     col = 0
