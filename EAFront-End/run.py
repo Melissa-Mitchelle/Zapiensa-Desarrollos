@@ -30,7 +30,10 @@ fields_translation = {'given_name': "Nombre",
 def verify_session(fn):
     def inner(*args, **kwargs):
         if not 'role' in session:
-            return redirect(url_for('login') + '?siguiente=' + request.path)
+            context = ''
+            if '?' in request.url:
+                context = request.url[(request.url.find('?') + 1):]
+            return redirect(url_for('login') + '?siguiente=' + request.path + "?" + context)
         return fn(*args, **kwargs)
 
     inner.__name__ = fn.__name__
@@ -151,8 +154,7 @@ def logout():
     except:
         pass
 
-    session.pop('role')
-    session.pop('api_session_token')
+    session.clear()
     return redirect('/')
 
 
