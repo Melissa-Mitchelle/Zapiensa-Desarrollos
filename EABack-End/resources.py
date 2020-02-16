@@ -320,6 +320,11 @@ class CreateReceiver(Resource):
     @roles_required('ADMINISTRADOR')
     def post(self):
         req_data = request.get_json()
+        events = []
+        if 'events' in request.get_json():
+            for event_id in request.get_json()['events']:
+                events.append(Events.get_one(event_id))
+        req_data.pop('events')
         req_data.update({'created_user': current_user.id})
         errors = receiver_schema.validate(req_data)
         if errors:
@@ -329,6 +334,10 @@ class CreateReceiver(Resource):
             if ReceiverModel.find_by_curp(data['curp']):
                 return {'message': 'El benificiario {} ya existe'.format(data['curp'])}, 500
             receiver = ReceiverModel(data)
+            receiver.events.clear()
+            for event in events:
+                receiver.events.append(event)
+
             receiver.create()
             return {
                 'message': 'Beneficiario {} creado'.format(data['curp'])
@@ -355,6 +364,11 @@ class EditReceiver(Resource):
     @roles_required('ADMINISTRADOR')
     def put(self, id_receiver):
         req_data = request.get_json()
+        events = []
+        if 'events' in request.get_json():
+            for event_id in request.get_json()['events']:
+                events.append(Events.get_one(event_id))
+            req_data.pop('events')
         errors = receiver_schema.validate(req_data)
         if errors:
             return errors, 500
@@ -362,6 +376,9 @@ class EditReceiver(Resource):
 
         try:
             receiver = ReceiverModel.get_one_receiver(id_receiver)
+            receiver.events.clear()
+            for event in events:
+                receiver.events.append(event)
             receiver.update(data)
             ser_receiver = receiver_schema.dump(receiver)
 

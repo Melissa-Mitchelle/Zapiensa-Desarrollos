@@ -138,6 +138,10 @@ class Events(db.Model):
         db.session.add(self)
         db.session.commit()
 
+    @staticmethod
+    def get_one(id_event):
+        return Events.query.get(id_event)
+
 
 class EventsSchema(Schema):
     id_event = fields.Int(dump_only=True)
@@ -163,7 +167,7 @@ class ReceiverModel(db.Model):
     created_time = db.Column(db.TIMESTAMP, nullable=False, default=datetime.utcnow)
     modified_user = db.Column(db.Integer, db.ForeignKey('USERS.id_user'), nullable=True)
     modified_time = db.Column(db.TIMESTAMP, nullable=True, default=datetime.utcnow, onupdate=datetime.utcnow)
-    events = association_proxy('receivers_events', 'event')
+    events = association_proxy('receivers_events', 'event', creator=lambda event: ReceiversEvents(event=event))
 
     def __init__(self, data):
         self.given_name = data.get('given_name')

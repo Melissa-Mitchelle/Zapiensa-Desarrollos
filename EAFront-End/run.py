@@ -190,9 +190,15 @@ def create_receiver():
         return render_template('create_receiver.html', e_list=re.json())
     elif request.method == 'POST':
         payload = {
-            key: value[0] if len(value) == 1 else value
-            for key, value in request.form.items()
         }
+        for key, value in request.form.items():
+            if key == 'events':
+                payload[key] = request.form.getlist(key)
+            else:
+                if len(value) == 1:
+                    payload[key] = value[0]
+                else:
+                    payload[key] = value
         for key, value in payload.items():
             if value == "":
                 payload[key] = None
@@ -356,10 +362,15 @@ def edit_receiver():
         else:
             return 'No se encontro el usuario.'
     elif request.method == 'POST':
-        payload = {
-            key: value[0] if len(value) == 1 else value
-            for key, value in request.form.items()
-        }
+        payload = {}
+        for key, value in request.form.items():
+            if key == 'events':
+                payload[key] = request.form.getlist(key)
+            else:
+                if len(value) == 1:
+                    payload[key] = value[0]
+                else:
+                    payload[key] = value
         for key, value in payload.items():
             if value == "":
                 payload[key] = None

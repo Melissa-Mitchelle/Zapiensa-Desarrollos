@@ -4,6 +4,7 @@ Editar Beneficiario
 {% endblock %}
 {% block content %}
     <!--Formulario-->
+{% set receiver_events = namespace(value=[]) %}
 
       <form action="" id="actualizar" method="post">
         <input type="hidden" name="id_receiver" value="{{ receiver['id_receiver'] }}">
@@ -137,6 +138,7 @@ Editar Beneficiario
 <script type="text/javascript">
     $(document).ready(function () {
       $("#events").bsMultiSelect();
+      $("#events").val([{% for event in receiver.events %}{{event['id_event']}},{% endfor %}]).trigger("liszt:updated");
     $('#actualizar').submit( function(event){
         event.preventDefault();
         var form = $('#actualizar');
